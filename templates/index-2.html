@@ -11,6 +11,7 @@
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
 <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+<link href="{% static 'css/theme-toggle.css' %}" rel="stylesheet">
 <link rel="shortcut icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
 <link rel="icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
 
@@ -75,41 +76,6 @@
     animation: logo-scale-out 0.7s ease-in-out forwards;
   }
 </style>
-<!--<style>-->
-<!--  /* Тёмная тема */-->
-<!--  body.dark-theme {-->
-<!--    background-color: #121212;-->
-<!--    color: #e0e0e0;-->
-<!--  }-->
-
-<!--  body.dark-theme a {-->
-<!--    color: #bb86fc;-->
-<!--  }-->
-
-<!--  body.dark-theme .header-top,-->
-<!--  body.dark-theme .header-upper,-->
-<!--  body.dark-theme .main-header,-->
-<!--  body.dark-theme .sticky-header {-->
-<!--    background-color: #1f1f1f;-->
-<!--  }-->
-
-<!--  body.dark-theme .price-block,-->
-<!--  body.dark-theme .inner-column {-->
-<!--    background-color: #1e1e1e;-->
-<!--    color: #e0e0e0;-->
-<!--  }-->
-
-<!--  body.dark-theme .theme-btn {-->
-<!--    background-color: #bb86fc;-->
-<!--    color: #121212;-->
-<!--  }-->
-
-<!--  /* Модальные окна */-->
-<!--  body.dark-theme .my-modal-content {-->
-<!--    background-color: #2c2c2c !important;-->
-<!--    color: #e0e0e0 !important;-->
-<!--  }-->
-<!--</style>-->
 <style>
   /* Это должно идти **после** всех твоих подключённых CSS */
   .my-modal-content {
@@ -178,6 +144,14 @@
                         </a>
                     </li>
 
+                    <li class="theme-toggle-mobile d-block d-lg-none">
+                        <button type="button" class="theme-toggle-btn" data-theme-toggle aria-label="{% trans 'Переключить тему' %}">
+                            <i class="fa-solid fa-sun theme-icon theme-icon-sun" aria-hidden="true"></i>
+                            <span class="theme-toggle-label">{% trans 'Тема' %}</span>
+                            <i class="fa-solid fa-moon theme-icon theme-icon-moon" aria-hidden="true"></i>
+                        </button>
+                    </li>
+
                     {% if LANGUAGE_CODE == 'ru' %}
                     <li class="d-block d-lg-none">
                         <a href="/en{{ request.get_full_path|slice:'3:' }}">
@@ -208,11 +182,19 @@
 
 				</ul>
 
-				<!-- Desktop language dropdown -->
-				<div class="dropdown language d-none d-lg-block">
-					<a class="nav-link dropdown-toggle text-white" href="#" id="languageDropdown" role="button"
-					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fa fa-globe text-white"></i>
+                                <div class="theme-toggle-container d-none d-lg-flex align-items-center">
+                                        <button type="button" class="theme-toggle-btn" data-theme-toggle aria-label="{% trans 'Переключить тему' %}">
+                                                <i class="fa-solid fa-sun theme-icon theme-icon-sun" aria-hidden="true"></i>
+                                                <span class="theme-toggle-label">{% trans 'Темный режим' %}</span>
+                                                <i class="fa-solid fa-moon theme-icon theme-icon-moon" aria-hidden="true"></i>
+                                        </button>
+                                </div>
+
+                                <!-- Desktop language dropdown -->
+                                <div class="dropdown language d-none d-lg-block">
+                                        <a class="nav-link dropdown-toggle text-white" href="#" id="languageDropdown" role="button"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-globe text-white"></i>
 						{% if LANGUAGE_CODE == 'ru' %} Русский {% elif LANGUAGE_CODE == 'en' %} English {% endif %}
 						<span class="fa fa-angle-down"></span>
 					</a>
@@ -1148,24 +1130,6 @@
     }, 2000); // время показа прелоадера
   });
 </script>
-<!--<script>-->
-<!--  const themeToggle = document.getElementById('theme-toggle');-->
-<!--  const body = document.body;-->
-
-<!--  // Проверяем, есть ли сохранённая тема-->
-<!--  if (localStorage.getItem('theme') === 'dark') {-->
-<!--    body.classList.add('dark-theme');-->
-<!--  }-->
-
-<!--  themeToggle.addEventListener('click', () => {-->
-<!--    body.classList.toggle('dark-theme');-->
-
-<!--    if (body.classList.contains('dark-theme')) {-->
-<!--      localStorage.setItem('theme', 'dark');-->
-<!--    } else {-->
-<!--      localStorage.setItem('theme', 'light');-->
-<!--    }-->
-<!--  });-->
-<!--</script>-->
+<script src="{% static 'js/theme-toggle.js' %}"></script>
 </body>
 </html>
