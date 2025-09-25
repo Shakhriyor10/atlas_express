@@ -1,0 +1,33 @@
+footer.main-footer {
+  background: #111 url("{% static 'images/background/7.png' %}") no-repeat center/cover;
+  color: #ddd;
+  font-size: 14px;
+}
+
+footer .footer-widget h2 {
+  font-size: 17px;
+  margin-bottom: 14px;
+  color: #fff;
+  font-weight: 600;
+}
+
+footer .footer-list a,
+footer .news-widget a,
+footer .about-widget a {
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+footer .footer-list a:hover,
+footer .news-widget a:hover,
+footer .about-widget a:hover {
+  color: #1e90ff;
+}
+
+footer .footer-bottom {
+  text-align: center;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  color: #888;
+}

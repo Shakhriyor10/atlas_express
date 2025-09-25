@@ -1,0 +1,100 @@
+{% extends 'index-2.html' %}
+{% load static %}
+{% load i18n dict_utils %}
+{% block content %}
+    {% if contacts %}
+	<section class="testimonial-section">
+		<div class="auto-container">
+			<div class="sec-title centered">
+				{% if selected_country %}
+				{# Ищем выбранную страну в списке countries #}
+				{% for country in countries %}
+				{% if country.id|stringformat:'s' == selected_country %}
+				<h3>{% trans 'Контакты' %} {{ country.title }}</h3>
+				{% endif %}
+				{% endfor %}
+				{% else %}
+				<h3>{% trans 'Контакты' %}</h3>
+				{% endif %}
+				<div class="separater"></div>
+			</div>
+			<div class="row">
+				{% for address in contacts %}
+				<div class="col-lg-6 col-md-12 mb-4">
+					<div class="testimonial-block blue h-100">
+						<div class="inner-box">
+							<div class="quote-icon flaticon-left-quote"></div>
+							<div class="embed-responsive embed-responsive-16by9 mb-3">
+								<iframe
+										class="embed-responsive-item"
+										src="https://www.google.com/maps?q={{ address.coordinates1 }}&hl=ru&z=14&output=embed"
+										allowfullscreen
+										loading="lazy"
+										style="border:0;">
+								</iframe>
+							</div>
+							<div class="author-info">
+								<div class="info-inner">
+									{% if address.city and address.city.country and address.city.country.photo %}
+									<div class="author-image">
+										<img src="{{ address.city.country.photo.url }}" alt=""/>
+									</div>
+									{% endif %}
+									<div>
+										<h5 class="mb-1">{{ address.country.title }}</h5>
+										<div class="designation">{{ address.title }}</div>
+										<div class="designation">{{ address.city }}</div>
+										<div class="designation">📞 {{ address.phone }}
+										</div>
+									</div>
+								</div>
+							</div>
+							<br>
+						</div>
+					</div>
+				</div>
+
+				{% endfor %}
+			</div>
+
+			{% if is_paginated %}
+			<ul class="styled-pagination text-center">
+
+				{# Кнопка "назад" #}
+				{% if page_obj.has_previous %}
+				<li class="prev">
+					<a href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
+						<span class="fa fa-angle-left"></span>
+					</a>
+				</li>
+				{% endif %}
+
+				{# Список страниц #}
+				{% for page_num in paginator.page_range %}
+				{% if page_obj.number == page_num %}
+				<li><a class="active" href="#">{{ page_num }}</a></li>
+				{% else %}
+				<li>
+					<a href="?page={{ page_num }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
+						{{ page_num }}
+					</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+
+				{# Кнопка "вперёд" #}
+				{% if page_obj.has_next %}
+				<li class="next">
+					<a href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
+						<span class="fa fa-angle-right"></span>
+					</a>
+				</li>
+				{% endif %}
+
+			</ul>
+			{% endif %}
+		</div>
+	</section>
+	<!-- End Testimonial Section -->
+	{% endif %}
+{% endblock %}

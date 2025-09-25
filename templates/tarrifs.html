@@ -1,0 +1,38 @@
+{% extends 'index-2.html' %}
+{% load static %}
+
+{% block content %}
+{% for category in categories %}
+  <div class="sec-title blue centered">
+    <h3><span>{{ category.sender_recipient }}</span></h3>
+    <div class="separater"></div>
+  </div>
+
+  <div class="row clearfix">
+    {% for rate in category.rates_ordered %}
+      <div class="price-block
+                  col-lg-4 col-md-6 col-sm-12
+                  {% if rate.is_hot %}style-two active{% endif %}">
+        <div class="inner-box wow fadeInUp"
+             {% if rate.is_hot %}data-wow-delay="0ms" data-wow-duration="1500ms"{% endif %}>
+          <div class="title">{{ rate.rate_title }}</div>
+          <div class="price-box">
+            <div class="price">{{ rate.price }}$</div>
+            <div class="months">/КГ</div>
+          </div>
+          <ul class="price-list">
+            <li>Минимальный вес: {{ rate.minimal_weight }} кг</li>
+            <li>Срок: {{ rate.delivery_within }} дней</li>
+          </ul>
+        </div>
+      </div>
+    {% empty %}
+      <p>Тарифов для {{ category.sender_recipient }} пока нет.</p>
+    {% endfor %}
+  </div>
+{% empty %}
+  <p>Категорий тарифов пока нет.</p>
+{% endfor %}
+
+{% endblock %}
+

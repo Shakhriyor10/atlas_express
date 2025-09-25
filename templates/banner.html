@@ -1,0 +1,182 @@
+{# templates/partials/banner_section.html #}
+{% load static %}
+{% load i18n %}
+<style>
+.banner-section {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out;
+    z-index: 1;
+}
+</style>
+<section class="banner-section blue" id="bannerCarousel"
+         style="background-image: url({% static 'images/background/avia2.jpg' %})">
+		<div class="auto-container">
+			<div class="row clearfix">
+				<!-- Content Column -->
+				<div class="content-column col-lg-7 col-md-12 col-sm-12">
+					<div class="inner-column wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+						<h1>{% trans 'Лучший в мире поставщик логистических услуг' %}</h1>
+						<div class="text">{% trans 'Мы являемся гибким и преданным партнером по логистическим услугам. Мы работаем с вами, чтобы разрабатывать индивидуальные решения.' %}</div>
+					</div>
+				</div>
+
+				<!-- Form Column -->
+				<div class="form-column col-lg-5 col-md-12 col-sm-12">
+					<div class="inner-column wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
+						<h2>{% trans 'Поиск посылок' %}</h2>
+
+						<!-- Banner Form -->
+						<div class="banner-form">
+							<form id="track-form" method="post" action="{% url 'track_package' %}">
+								{% csrf_token %}
+								<div class="form-group">
+									<input type="text" name="trackid" placeholder="{% trans 'Введите ID посылки' %}" required>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="theme-btn btn-style-one">{% trans 'Поиск' %}</button>
+								</div>
+							</form>
+
+							<!-- Модальное окно Bootstrap 4 -->
+							<!-- …где-то в конце body… -->
+<!-- ========== ЯРКАЯ МОДАЛКА ========== -->
+
+<!-- ========== /ЯРКАЯ МОДАЛКА ========== -->
+
+<!--							Estimate Cost For Your Shipments-->
+						</div>
+						<!-- End Banner Form -->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+<script>
+document.getElementById("track-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const form = e.target, fd = new FormData(form);
+
+    fetch(form.action, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": fd.get("csrfmiddlewaretoken")
+        },
+        body: fd
+    })
+    .then(response => {
+				if (!response.ok) {
+					// если сервер вернул ошибку (400, 404 и т.д.)
+					document.getElementById("modalBody").innerHTML =
+					  `<div class="alert alert-warning text-center">
+						 {% trans 'Ничего не найдено' %}
+					   </div>`;
+					$('#resultModal').modal('show');
+					// чтобы дальше .then(data) не выполнялся
+					throw new Error("not found");
+				}
+				return response.json();
+			})
+				.then(data => {
+		  if (data.error) throw new Error(data.error);
+
+		  // Преобразование статуса и дат (ваша существующая логика)
+		  let statusText;
+		  switch (data.status) {
+			case "in_warehouse":    statusText = "{% trans 'На складе' %}"; break;
+			case "location":        statusText = "{% trans 'Местоположение' %}"; break;
+			case "packed":          statusText = "{% trans 'Упакован' %}"; break;
+			case "shipped":         statusText = "{% trans 'Отправлен' %}"; break;
+			case "in_customs":      statusText = "{% trans 'На таможне' %}"; break;
+			case "arrive_warehouse":statusText = "{% trans 'Прибыл на склад' %}"; break;
+			case "accept_location": statusText = "{% trans 'Принято в местоположение' %}"; break;
+			case "delivered":       statusText = "{% trans 'Доставлено' %}"; break;
+			default:                statusText = data.status;
+		  }
+
+		  let dateLabel  = "{% trans 'Дата прибытия' %}";
+		  let dateValue  = data.estimatedArrival;
+		  if (data.status === "delivered") {
+			dateLabel = "{% trans 'Доставлено' %}";
+			dateValue = data.updatedAt ? data.updatedAt.split(" ")[0] : data.estimatedArrival;
+		  }
+
+		  // Рендерим модалку с текущим местоположением
+		  document.getElementById("modalBody").innerHTML = `
+			<div style="line-height:1.6;font-size:16px">
+			  <p><strong>🔎 ID:</strong> ${data.id}</p>
+			  <p><strong>📦 {% trans 'Статус:' %}</strong> ${statusText}</p>
+			  <p><strong>📅 ${dateLabel}:</strong> ${dateValue}</p>
+			</div>`;
+		 document.getElementById("modalFooter").innerHTML = `
+			  <div class="btn-box">
+			    <a href="/tracking/${data.id}/" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
+			  </div>
+			`;
+		  $('#resultModal').modal('show');
+		})
+    .catch(err => {
+        // сюда попадают только наши "not found" или сетевые ошибки
+        console.log(err);
+    });
+});
+</script>
+<script>
+const images = [
+	"{% static 'images/background/avia2.jpg' %}",
+    "{% static 'images/background/1-2-3-4.jpg' %}",
+    "{% static 'images/background/avia1.jpg' %}",
+];
+
+let index = 0;
+const banner = document.getElementById("bannerCarousel");
+
+// Предзагрузка
+images.forEach(src => {
+    const img = new Image();
+    img.src = src;
+});
+
+setInterval(() => {
+    index = (index + 1) % images.length;
+    banner.style.backgroundImage = `url('${images[index]}')`;
+}, 5000); // каждые 5 секунд
+</script>
+
+<!-- Результирующая модалка -->
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog"
+	 aria-labelledby="resultModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content my-modal-content">
+
+			<div class="modal-header my-modal-header">
+				<h5 class="modal-title" id="resultModalLabel">
+					📦 {% trans 'Результат отслеживания' %}
+				</h5>
+				<button type="button" class="close my-modal-close" data-dismiss="modal" aria-label="Закрыть">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body my-modal-body" id="modalBody">
+				<p>{% trans 'Загрузка…' %}</p>
+			</div>
+
+			<div class="modal-footer my-modal-footer">
+				<div class="btn-box" id="modalFooter">
+
+				</div>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'Ок' %}</button>
+			</div>
+
+		</div>
+	</div>
+</div>

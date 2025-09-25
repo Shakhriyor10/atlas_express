@@ -1,0 +1,1171 @@
+{% load static %}
+{% load i18n dict_utils %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AtlasExpress.uz</title>
+<!-- Stylesheets -->
+<!--<link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">-->
+	<link href="{% static 'css/mystyle.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+<link rel="shortcut icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
+
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<!-- Responsive -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+<!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+</head>
+
+<body class="hidden-bar-wrapper">
+<div id="preloader">
+  <div class="preloader-content">
+    <img src="{% static 'images/atlas33.png' %}" class="logo" alt="AtlasExpress">
+  </div>
+</div>
+
+<style>
+  /* Прелоадер на весь экран */
+  #preloader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    overflow: hidden;
+  }
+
+  .preloader-content {
+    position: relative;
+    text-align: center;
+  }
+
+.preloader-content .logo {
+  width: 20vw;        /* занимает 20% ширины экрана */
+  max-width: 200px;   /* но не больше 220px */
+  min-width: 130px;   /* и не меньше 150px */
+  animation: logo-scale-in 1s ease-in-out forwards;
+}
+
+  /* Анимация появления */
+  @keyframes logo-scale-in {
+    0%   { transform: scale(0); opacity: 0; }
+    50%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Анимация исчезновения */
+  @keyframes logo-scale-out {
+    0%   { transform: scale(1); opacity: 1; }
+    50%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0; }
+  }
+
+  /* класс для запуска анимации исчезновения */
+  .logo.hide {
+    animation: logo-scale-out 0.7s ease-in-out forwards;
+  }
+</style>
+<!--<style>-->
+<!--  /* Тёмная тема */-->
+<!--  body.dark-theme {-->
+<!--    background-color: #121212;-->
+<!--    color: #e0e0e0;-->
+<!--  }-->
+
+<!--  body.dark-theme a {-->
+<!--    color: #bb86fc;-->
+<!--  }-->
+
+<!--  body.dark-theme .header-top,-->
+<!--  body.dark-theme .header-upper,-->
+<!--  body.dark-theme .main-header,-->
+<!--  body.dark-theme .sticky-header {-->
+<!--    background-color: #1f1f1f;-->
+<!--  }-->
+
+<!--  body.dark-theme .price-block,-->
+<!--  body.dark-theme .inner-column {-->
+<!--    background-color: #1e1e1e;-->
+<!--    color: #e0e0e0;-->
+<!--  }-->
+
+<!--  body.dark-theme .theme-btn {-->
+<!--    background-color: #bb86fc;-->
+<!--    color: #121212;-->
+<!--  }-->
+
+<!--  /* Модальные окна */-->
+<!--  body.dark-theme .my-modal-content {-->
+<!--    background-color: #2c2c2c !important;-->
+<!--    color: #e0e0e0 !important;-->
+<!--  }-->
+<!--</style>-->
+<style>
+  /* Это должно идти **после** всех твоих подключённых CSS */
+  .my-modal-content {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+  }
+  .my-modal-header {
+    background: linear-gradient(135deg, #005e93, #005e93) !important;
+    color: #fff !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+  }
+  .my-modal-close {
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+  .my-modal-body {
+    background-color: #ffffff !important;
+    color: #111 !important;
+    font-size: 16px;
+    padding: 20px !important;
+  }
+  .my-modal-footer {
+    background-color: #f0f0f0 !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+  }
+  .modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    opacity: 1 !important;
+  }
+</style>
+
+
+<div class="page-wrapper">
+
+    <!-- Preloader -->
+    <div class="preloader"></div>
+
+ 	<!-- Main Header-->
+    <header class="main-header">
+
+		<!--Header Top-->
+    	<div class="header-top">
+    <div class="auto-container">
+        <div class="clearfix d-flex flex-wrap justify-content-between align-items-center">
+
+            <!-- Top Left -->
+            <div class="top-left d-flex align-items-center">
+                <ul class="social-box d-flex align-items-center flex-wrap mb-0 p-0"
+                    style="gap: 10px; list-style: none; position: relative; z-index: 9999;">
+                    <li>
+                        <a href="https://www.instagram.com/atlasexpress.usa?igsh=MW9nMGgxYjdqdzV3eA==" target="_blank" rel="noopener">
+                            <span class="fa-brands fa-instagram text-white" style="font-size: 18px;"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/profile.php?id=61561937198092&mibextid=LQQJ4d" target="_blank" rel="noopener">
+                            <span class="fa-brands fa-facebook text-white" style="font-size: 18px;"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://t.me/AtlasExpressUS" target="_blank" rel="noopener">
+                            <span class="fa-brands fa-telegram text-white" style="font-size: 18px;"></span>
+                        </a>
+                    </li>
+
+                    {% if LANGUAGE_CODE == 'ru' %}
+                    <li class="d-block d-lg-none">
+                        <a href="/en{{ request.get_full_path|slice:'3:' }}">
+                            <span class="fa fa-globe text-white"></span> RU
+                        </a>
+                    </li>
+                    {% elif LANGUAGE_CODE == 'en' %}
+                    <li class="d-block d-lg-none">
+                        <a href="/ru{{ request.get_full_path|slice:'3:' }}">
+                            <span class="fa fa-globe text-white"></span> EN
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Top Right -->
+			<div class="top-right d-flex align-items-center">
+
+				<!-- Скрыто на мобильных, видно только на больших -->
+				<ul class="right-list mb-0 mr-3 d-none d-lg-flex" style="list-style: none;">
+					<li>
+						<span class="icon flaticon-mail"></span> atlasexpressuz@gmail.com
+					</li>
+					<li style="font-size: 14px;">
+<!--						<span class="icon flaticon-phone-contact"></span> +998 77 293 33 00<br>-->
+					</li>
+
+				</ul>
+
+				<!-- Desktop language dropdown -->
+				<div class="dropdown language d-none d-lg-block">
+					<a class="nav-link dropdown-toggle text-white" href="#" id="languageDropdown" role="button"
+					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-globe text-white"></i>
+						{% if LANGUAGE_CODE == 'ru' %} Русский {% elif LANGUAGE_CODE == 'en' %} English {% endif %}
+						<span class="fa fa-angle-down"></span>
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="languageDropdown">
+						<form method="post" action="{% url 'set_language' %}" id="language-form">
+							{% csrf_token %}
+							<button type="submit" name="language" value="ru"
+									class="dropdown-item {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">
+								Русский
+							</button>
+							<button type="submit" name="language" value="en"
+									class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
+								English
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+        </div>
+    </div>
+</div>
+
+    	<!--Header-Upper-->
+        <div class="header-upper">
+        	<div class="auto-container">
+            	<div class="clearfix">
+                	<div class="pull-left logo-box">
+                    	<div class="logo"><a href="index.html"><img src="images/logo.png" alt="" title=""></a></div>
+                    </div>
+                    <div class="pull-right upper-right">
+
+						<!--Header Lower-->
+						<div class="header-lower" >
+							<div class="clearfix">
+								<div class="nav-outer clearfix">
+									<!-- Main Menu -->
+									<nav class="main-menu navbar-expand-md">
+										<div class="navbar-header">
+											<!-- Toggle Button -->
+											<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+										</div>
+
+										<div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
+											<ul class="navigation clearfix">
+												<li class="current"><a href="{% url 'home' %}">{% trans 'Главная' %}</a>
+												</li>
+                                                <li class="dropdown">
+                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                       aria-expanded="false">
+                                                        {% trans 'Контакты' %} <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a href="{% url 'contacts' %}"
+                                                               class="{% if not selected_country and not selected_city %}active{% endif %}">
+                                                                {% trans 'Все контакты' %}
+                                                            </a>
+                                                        </li>
+                                                        <li class="divider"></li>
+
+                                                        {% for country in countries %}
+                                                        <li class="dropdown">
+                                                            <a href="{% url 'contacts' %}?country={{ country.id }}"
+                                                               class="{% if selected_country == country.id|stringformat:'s' %}active{% endif %}">
+                                                                {{ country.title }} <span class="caret"></span>
+                                                            </a>
+
+                                                            {% with cities_by_country|dict_get:country.id as cities %}
+                                                            {% if cities %}
+                                                            <ul class="dropdown-menu">
+                                                                {% for city in cities %}
+                                                                <li>
+                                                                    <a href="{% url 'contacts' %}?country={{ country.id }}&city={{ city.id }}"
+                                                                       class="{% if selected_city == city.id|stringformat:'s' %}active{% endif %}">
+                                                                        {{ city.title }}
+                                                                    </a>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                            {% endif %}
+                                                            {% endwith %}
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+												<li class="dropdown">
+													<a href="#" data-toggle="dropdown"
+													   aria-haspopup="true" aria-expanded="false">
+														{% trans 'Тарифы' %} <span class="caret"></span>
+													</a>
+													<ul class="dropdown-menu">
+														<li><a href="{% url 'rates' %}">{% trans 'Все тарифы' %}</a>
+														</li>
+														<li class="divider"></li>
+														{% for category in rate_categories %}
+														<li>
+															<a href="{% url 'rates_by_category' category.pk %}">
+																{{ category.sender_recipient }}
+															</a>
+														</li>
+														{% endfor %}
+													</ul>
+												</li>
+												<li></li>
+<!--												<li><a href="{% url 'tracking_details' %}">{% trans 'Поиск посылок' %}</a></li>-->
+											</ul>
+										</div>
+                                    </nav>
+
+                                    <!-- Main Menu End-->
+                                    <div class="outer-box clearfix">
+
+                                        <!--Option Box-->
+                                        <div class="option-box">
+
+                                            <!--Search Box-->
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+						<!--End Header Lower-->
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!--End Header Upper-->
+
+		<!--Sticky Header-->
+        <div class="sticky-header">
+        	<div class="auto-container clearfix">
+            	<!--Logo-->
+            	<div class="logo pull-left">
+                	<a href="{% url 'home' %}" class="img-responsive"><img src="{% static 'images/atlas_logo3.png' %}" alt="" title=""></a>
+                </div>
+
+                <!--Right Col-->
+                <div class="right-col pull-right">
+                	<!-- Main Menu -->
+                    <nav class="main-menu navbar-expand-md">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+
+						<div class="navbar-collapse collapse clearfix" id="navbarSupportedContent1">
+							<ul class="navigation clearfix">
+								<li class="current"><a href="{% url 'home' %}">{% trans 'Главная' %}<i
+										class="fa fa-angle-down"></i></a>
+								</li>
+								<li class="dropdown">
+									<a href="{% url 'contacts' %}">{% trans 'Контакты' %}</a>
+									<ul>
+										<li>
+											<a href="{% url 'contacts' %}"
+											   class="{% if not selected_country and not selected_city %}active{% endif %}">
+												{% trans 'Все контакты' %}
+											</a>
+										</li>
+
+										{% for country in countries %}
+										<li class="dropdown">
+											<a href="{% url 'contacts' %}?country={{ country.id }}"
+											   class="{% if selected_country == country.id|stringformat:'s' %}active{% endif %}">
+												{{ country.title }}
+															</a>
+
+                                            {% with cities_by_country|dict_get:country.id as cities %}
+                                            {% if cities %}
+                                            <ul>
+                                                {% for city in cities %}
+                                                <li>
+                                                    <a href="{% url 'contacts' %}?country={{ country.id }}&city={{ city.id }}"
+                                                       class="{% if selected_city == city.id|stringformat:'s' %}active{% endif %}">
+                                                        {{ city.title }}
+                                                    </a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% endif %}
+                                            {% endwith %}
+                                            <div class="dropdown-btn"><span
+                                                    class="fa fa-angle-down"></span></div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span>
+                                    </div>
+                                </li>
+								<li class="dropdown">
+									<a href="#" data-toggle="dropdown"
+									   aria-haspopup="true" aria-expanded="false">
+									{% trans 'Тарифы' %} <span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu">
+										<li><a href="{% url 'rates' %}">{% trans 'Все тарифы' %}</a></li>
+										<li class="divider"></li>
+										{% for category in rate_categories %}
+										<li>
+											<a href="{% url 'rates_by_category' category.pk %}">
+												{{ category.sender_recipient }}
+											</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</li>
+								<li><a href="{% url 'tracking_details' %}">{% trans 'Поиск посылок' %}</a></li>
+							</ul>
+                        </div>
+                    </nav><!-- Main Menu End-->
+
+                </div>
+
+            </div>
+        </div>
+        <!--End Sticky Header-->
+
+    </header>
+    <!--End Main Header -->
+
+	<!--Banner Section-->
+    {{ banner_section|safe }}
+	<!--End Banner Section-->
+
+	<!-- About Section -->
+<!--	<section class="about-section blue">-->
+<!--		<div class="auto-container">-->
+<!--			<div class="sec-title blue centered">-->
+<!--				<h3>About <span>The Carga</span></h3>-->
+<!--				<div class="separater"></div>-->
+<!--				<div class="text">With over 50 years experience in the Cargo and Transport Services</div>-->
+<!--			</div>-->
+<!--			-->
+<!--			<div class="row clearfix">-->
+<!--				-->
+<!--				&lt;!&ndash; Video Column &ndash;&gt;-->
+<!--				<div class="video-column col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-column wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">-->
+<!--						-->
+<!--						&lt;!&ndash;Video Box&ndash;&gt;-->
+<!--						<div class="video-box">-->
+<!--							<figure class="image">-->
+<!--								<img src="images/resource/video-image.jpg" alt="">-->
+<!--							</figure>-->
+<!--							<a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-image overlay-box"><i class="play-now flaticon-play-button-4"></i></a>-->
+<!--						</div>-->
+<!--						-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; Content Column &ndash;&gt;-->
+<!--				<div class="content-column col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-column wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">-->
+<!--						<h3>Reach your destination 100% sure and safe</h3>-->
+<!--						<div class="text">-->
+<!--							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim venia, quis nostrud exercitation ullamco laboris  .</p>-->
+<!--							<blockquote>-->
+<!--								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim venia, quis nostrud exercitation ullamco laboris .-->
+<!--							</blockquote>-->
+<!--							<p>ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>-->
+<!--						</div>-->
+<!--						<a href="#" class="theme-btn btn-style-one">Read More</a>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--			</div>-->
+<!--			-->
+<!--			<div class="row clearfix">-->
+<!--				-->
+<!--				&lt;!&ndash; Services Block &ndash;&gt;-->
+<!--				<div class="services-block col-lg-4 col-md-6 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">-->
+<!--						<div class="icon-box">-->
+<!--							<span class="icon flaticon-calendar-1"></span>-->
+<!--						</div>-->
+<!--						<h2><a href="#">80% Time Speed</a></h2>-->
+<!--						<div class="category">Design Packages</div>-->
+<!--						<div class="text">Benenatis mauris. Vestibulum ante ipsum primis in industry, logistics,nance, business orci ultrices.</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; Services Block &ndash;&gt;-->
+<!--				<div class="services-block col-lg-4 col-md-6 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInLeft" data-wow-delay="300ms" data-wow-duration="1500ms">-->
+<!--						<div class="icon-box">-->
+<!--							<span class="icon flaticon-gps"></span>-->
+<!--						</div>-->
+<!--						<h2><a href="#">Track All Your Shippings</a></h2>-->
+<!--						<div class="category">Flexible Movers</div>-->
+<!--						<div class="text">Benenatis mauris. Vestibulum ante ipsum primis in industry, logistics,nance, business orci ultrices.</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; Services Block &ndash;&gt;-->
+<!--				<div class="services-block col-lg-4 col-md-6 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInLeft" data-wow-delay="600ms" data-wow-duration="1500ms">-->
+<!--						<div class="icon-box">-->
+<!--							<span class="icon flaticon-help-operator"></span>-->
+<!--						</div>-->
+<!--						<h2><a href="#">24/7 Support</a></h2>-->
+<!--						<div class="category">Regular Visits</div>-->
+<!--						<div class="text">Benenatis mauris. Vestibulum ante ipsum primis in industry, logistics,nance, business orci ultrices.</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--			</div>-->
+<!--			-->
+<!--		</div>-->
+<!--	</section>-->
+	<!-- End About Section -->
+
+	<!-- Services Section -->
+	<section class="services-section" style=" background-image:url({% static 'images/background/2.png' %} )">
+		<div class="auto-container">
+			{% block content %}
+			{% if rates %}
+    <div class="sec-title blue centered">
+      <h3><span>{% trans 'Тарифы' %}</span></h3>
+      <div class="separater"></div>
+    </div>
+
+    <div class="row clearfix">
+      {% for rate in rates %}
+        {% if forloop.counter == 2 %}
+          {# второй из трёх — «красивый» стиль #}
+          <div class="price-block style-two active col-lg-4 col-md-6 col-sm-12">
+            <div class="inner-box wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
+              <div class="title">{{ rate.country }}</div>
+              <div class="price-box">
+                <div class="price">{{ rate.price }}$</div>
+                <div class="months">/{% trans 'КГ' %}</div>
+              </div>
+              <ul class="price-list">
+				  <li>{{ rate.rate_title }}</li>
+                <li>{% trans 'Доставка в течение:' %} {{ rate.delivery_within }} {% trans 'дней' %}</li>
+                <li>{% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</li>
+              </ul>
+				<br>
+				<br>
+              <div class="btn-box">
+                <a href="{% url 'rates' %}" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          {# первый и третий — стандартный блок #}
+          <div class="price-block col-lg-4 col-md-6 col-sm-12">
+            <div class="inner-box wowallow fadeInLeft animated"
+                 data-wow-delay="0ms" data-wow-duration="1500ms">
+				<div class="title">{{ rate.country }}</div>
+              <div class="price-box">
+                <div class="price">{{ rate.price }}$</div>
+                <div class="months">/{% trans 'КГ' %}</div>
+              </div>
+              <ul class="price-list">
+                <li>{{ rate.rate_title }}</li>
+                <li>{% trans 'Доставка в течение:' %} {{ rate.delivery_within }} {% trans 'дней' %}</li>
+                <li>{% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</li>
+              </ul>
+              <div class="btn-box">
+                <a href="{% url 'rates' %}" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Тарифов пока нет.</p>
+  {% endif %}
+			{% endblock %}
+		</div>
+	</section>
+	<!-- End Services Section -->
+
+	<!-- News Section -->
+<!--	<section class="news-section">-->
+<!--		<div class="auto-container">-->
+<!--			<div class="sec-title blue centered">-->
+<!--				<h3>Latest <span>Blog Posts</span></h3>-->
+<!--				<div class="separater"></div>-->
+<!--				<div class="text">With over 50 years experience in the Cargo and Transport Services</div>-->
+<!--			</div>-->
+<!--			-->
+<!--			<div class="row clearfix">-->
+<!--			-->
+<!--				&lt;!&ndash; News Block &ndash;&gt;-->
+<!--				<div class="news-block col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">-->
+<!--						<div class="row clearfix">-->
+<!--							&lt;!&ndash; Image Column &ndash;&gt;-->
+<!--							<div class="image-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<div class="image">-->
+<!--										<a href="#"><img src="images/resource/news-1.jpg" alt="" /></a>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Content Column &ndash;&gt;-->
+<!--							<div class="content-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<ul class="post-meta">-->
+<!--										<li><span class="icon flaticon-calendar-1"></span>Oct 18 ,2018</li>-->
+<!--										<li><span class="icon fa fa-user"></span>Allan Doe</li>-->
+<!--									</ul>-->
+<!--									<h3><a href="#">Cargo Ships Arrival</a></h3>-->
+<!--									<div class="text">Lorem ipsum dolor sit amectetur adipisic ing elit, sed do eiusmod  didunt ut labore .</div>-->
+<!--									<a href="#" class="read-more">Read more</a>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; News Block &ndash;&gt;-->
+<!--				<div class="news-block col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInUp" data-wow-delay="300ms" data-wow-duration="1500ms">-->
+<!--						<div class="row clearfix">-->
+<!--							&lt;!&ndash; Image Column &ndash;&gt;-->
+<!--							<div class="image-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<div class="image">-->
+<!--										<a href="#"><img src="images/resource/news-2.jpg" alt="" /></a>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Content Column &ndash;&gt;-->
+<!--							<div class="content-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<ul class="post-meta">-->
+<!--										<li><span class="icon flaticon-calendar-1"></span>Dec 09 ,2018</li>-->
+<!--										<li><span class="icon fa fa-user"></span>Allan Doe</li>-->
+<!--									</ul>-->
+<!--									<h3><a href="#">How Shipments Works?</a></h3>-->
+<!--									<div class="text">Lorem ipsum dolor sit amectetur adipisic ing elit, sed do eiusmod  didunt ut labore .</div>-->
+<!--									<a href="#" class="read-more">Read more</a>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; News Block &ndash;&gt;-->
+<!--				<div class="news-block col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInUp" data-wow-delay="600ms" data-wow-duration="1500ms">-->
+<!--						<div class="row clearfix">-->
+<!--							&lt;!&ndash; Image Column &ndash;&gt;-->
+<!--							<div class="image-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<div class="image">-->
+<!--										<a href="#"><img src="images/resource/news-3.jpg" alt="" /></a>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Content Column &ndash;&gt;-->
+<!--							<div class="content-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<ul class="post-meta">-->
+<!--										<li><span class="icon flaticon-calendar-1"></span>Dec 27 ,2018</li>-->
+<!--										<li><span class="icon fa fa-user"></span>Allan Doe</li>-->
+<!--									</ul>-->
+<!--									<h3><a href="#">Here, Time Matters</a></h3>-->
+<!--									<div class="text">Lorem ipsum dolor sit amectetur adipisic ing elit, sed do eiusmod  didunt ut labore .</div>-->
+<!--									<a href="#" class="read-more">Read more</a>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--				&lt;!&ndash; News Block &ndash;&gt;-->
+<!--				<div class="news-block col-lg-6 col-md-12 col-sm-12">-->
+<!--					<div class="inner-box wow fadeInUp" data-wow-delay="900ms" data-wow-duration="1500ms">-->
+<!--						<div class="row clearfix">-->
+<!--							&lt;!&ndash; Image Column &ndash;&gt;-->
+<!--							<div class="image-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<div class="image">-->
+<!--										<a href="#"><img src="images/resource/news-4.jpg" alt="" /></a>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Content Column &ndash;&gt;-->
+<!--							<div class="content-column col-lg-6 col-md-6 col-sm-12">-->
+<!--								<div class="inner-column">-->
+<!--									<ul class="post-meta">-->
+<!--										<li><span class="icon flaticon-calendar-1"></span>Jan 19 ,2020</li>-->
+<!--										<li><span class="icon fa fa-user"></span>Allan Doe</li>-->
+<!--									</ul>-->
+<!--									<h3><a href="#">Air Frieght Landed.</a></h3>-->
+<!--									<div class="text">Lorem ipsum dolor sit amectetur adipisic ing elit, sed do eiusmod  didunt ut labore .</div>-->
+<!--									<a href="#" class="read-more">Read more</a>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			-->
+<!--			</div>-->
+<!--		</div>	-->
+<!--	</section>-->
+	<!-- End News Section -->
+
+	<!-- Counter Section -->
+	{% block counter_section %}
+	<section class="counter-section" style="background-image:url(images/background/3.jpg)">
+		<div class="auto-container">
+			<div class="row clearfix">
+
+				<!-- Order Column -->
+				<div class="order-column col-lg-6 col-md-12 col-sm-12">
+					<div class="inner-column blue" style="background-image:url({% static 'images/background/4.png' %})">
+						<div class="icon-box">
+
+						</div>
+						<h2>{% trans 'Поиск посылок' %}</h2>
+						<div class="text">{% trans 'Введите ID посылки' %}</div>
+
+
+
+<!--						<form method="post"-->
+<!--      action="{% url 'track_package' %}"-->
+<!--      class="track-form">-->
+<!--  {% csrf_token %}-->
+<!--  <div class="form-group">-->
+<!--    <input type="text" name="trackid"-->
+<!--           placeholder="Введите ID посылки" required>-->
+<!--  </div>-->
+<!--  <div class="form-group">-->
+<!--    <button type="submit" class="theme-btn btn-style-one">-->
+<!--      Поиск-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</form>-->
+
+
+
+
+						<!--Track Form-->
+						<div class="track-form">
+							<form method="post"
+								  action="{% url 'track_package' %}" {# или ваш URL для обработки POST #}
+								  class="track-form">
+								{% csrf_token %}
+								<div class="form-group">
+									<input type="text"
+										   name="trackid"
+										   placeholder="ID"
+										   required>
+									<button type="submit" class="theme-btn">
+										<span class="fa fa-search"></span>
+									</button>
+								</div>
+							</form>
+                        </div>
+
+						<!-- Social Box -->
+						<div class="social-box">
+							<a href="#" class="fa-brands fa-twitter"></a>
+							<a href="#" class="fa-brands fa-facebook"></a>
+							<a href="#" class="fa-brands fa-linkedin"></a>
+							<a href="#" class="fa-brands fa-google-plus"></a>
+						</div>
+
+					</div>
+				</div>
+
+				<!-- Counter Column -->
+				<div class="counter-column col-lg-6 col-md-12 col-sm-12">
+					<div class="inner-column">
+
+						<div class="fact-counter">
+							<div class="clearfix">
+								<!--Column-->
+								<div class="column counter-column col-lg-6 col-md-6 col-sm-12">
+									<div class="inner blue">
+										<div class="content">
+											<div class="count-outer count-box">
+												<span class="count-text" data-speed="2000" data-stop="8">0</span>
+											</div>
+											<h4 class="counter-title">{% trans 'Многолетний опыт' %}</h4>
+										</div>
+									</div>
+								</div>
+
+								<!--Column-->
+								<div class="column counter-column col-lg-6 col-md-6 col-sm-12">
+									<div class="inner blue">
+										<div class="content">
+											<div class="count-outer count-box alternate">
+												<span class="count-text" data-speed="2800" data-stop="258">0</span>+
+											</div>
+											<h4 class="counter-title">{% trans 'Профессиональные сотрудники' %}</h4>
+										</div>
+									</div>
+								</div>
+
+								<!--Column-->
+								<div class="column counter-column col-lg-6 col-md-6 col-sm-12">
+									<div class="inner blue">
+										<div class="content">
+											<div class="count-outer count-box">
+												<span class="count-text" data-speed="2500" data-stop="50">0</span>%
+											</div>
+											<h4 class="counter-title">{% trans 'Охваченные территории' %}</h4>
+										</div>
+									</div>
+								</div>
+
+								<!--Column-->
+
+								<!--Column-->
+								<div class="column counter-column col-lg-6 col-md-6 col-sm-12">
+									<div class="inner blue">
+										<div class="content">
+											<div class="count-outer count-box">
+												<span class="count-text" data-speed="2000" data-stop="70000">0</span>+
+											</div>
+											<h4 class="counter-title">{% trans 'Корпоративные клиенты' %}</h4>
+										</div>
+									</div>
+								</div>
+
+								<!--Column-->
+
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+	{% endblock %}
+	<!-- Testimonial Section -->
+	{% if addresses %}
+	<section class="testimonial-section">
+		<div class="auto-container">
+			<div class="sec-title centered">
+				<h3>{% trans 'Контакты' %}</h3>
+				<div class="separater"></div>
+			</div>
+			<div class="two-item-carousel owl-carousel owl-theme">
+
+				<!-- Testimonial Block -->
+				{% for address in addresses %}
+				<div class="testimonial-block blue">
+					<div class="inner-box">
+						<div class="quote-icon flaticon-left-quote"></div>
+						<div class="embed-responsive embed-responsive-16by9">
+							<iframe
+									class="embed-responsive-item"
+									src="https://www.google.com/maps?q={{ address.coordinates1 }}&hl=ru&z=14&output=embed"
+									allowfullscreen
+									loading="lazy"
+									style="border:0;">
+							</iframe>
+						</div>
+						<div class="author-info">
+							<div class="info-inner">
+									{% if address.city and address.city.country and address.city.country.photo %}
+									<div class="author-image">
+										<img src="{{ address.city.country.photo.url }}" alt=""/>
+									</div>
+									{% endif %}
+								<h4>{{ address.country }}</h4>
+								<div class="designation">{{ address.title }}</div>
+								<div class="designation">{{ address.city }}</div>
+								<!-- Social Box -->
+								<div class="designation">📞 {{ address.phone }}</div>
+
+							</div>
+						</div>
+						<br>
+					</div>
+				</div>
+				{% endfor %}
+				<!-- Testimonial Block -->
+
+			</div>
+		</div>
+	</section>
+	<!-- End Testimonial Section -->
+	{% endif %}
+	<!--Sponsors Section-->
+	<section class="sponsors-section">
+		<div class="auto-container">
+
+		</div>
+	</section>
+	<!--End Sponsors Section-->
+
+
+
+	<!-- Fullwidth Section -->
+<!--	<section class="fullwidth-section blue">-->
+<!--		<div class="outer-container">-->
+<!--			<div class="clearfix">-->
+<!--				-->
+<!--				&lt;!&ndash; Left Column &ndash;&gt;-->
+<!--				-->
+<!--				&lt;!&ndash; Right Column &ndash;&gt;-->
+<!--				<div class="right-column" style="background-image:url({% static 'images/background/6.jpg' %})">-->
+<!--					<div class="inner-column">-->
+<!--						<h3>Are You A Shipper?</h3>-->
+<!--						<div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</div>-->
+<!--						<a href="#" class="theme-btn btn-style-two">Contact us</a>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</section>-->
+	<!-- End Fullwidth Section -->
+<!--<button id="theme-toggle" class="theme-btn">Тёмная тема</button>-->
+	<!--Main Footer-->
+    <footer class="main-footer blue" style="background-image:url({% static 'images/background/7.png' %})">
+    	<div class="auto-container">
+  <!--Widgets Section-->
+  <div class="widgets-section">
+    <div class="row justify-content-center">
+
+      <!-- Useful Links -->
+      <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+        <div class="footer-widget logo-widget">
+          <h2 style="color: #fff"><span class="icon fa fa-thumbs-o-up"></span>{% trans 'Ссылки на сайт' %}</h2>
+          <ul class="footer-list list-unstyled">
+		    <li><a href="#">{% trans 'Главная' %}</a></li>
+            <li><a href="#">{% trans 'Поиск посылок' %}</a></li>
+            <li><a href="#">{% trans 'Тарифы' %}</a></li>
+            <li><a href="#">{% trans 'Контакты' %}</a></li>
+            <li><a href="#">{% trans 'Связатся с нами' %}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Recent News -->
+      <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+        <div class="footer-widget news-widget">
+          <h2 style="color: #fff"><span class="icon fa fa-bullhorn"></span>{% trans 'Последние новости' %}</h2>
+          <div class="news-widget-block">
+            <h4><a href="#">{% trans 'Добавлены новые регулярные рейсы в Канаду' %}</a></h4>
+            <div class="post-date">{% trans 'Авг 15, 2024' %}</div>
+          </div>
+          <div class="news-widget-block">
+            <h4><a href="#">{% trans 'Представлен сайт который можно следить посылок' %}</a></h4>
+            <div class="post-date">{% trans 'Сен 26, 2024' %}</div>
+          </div>
+          <div class="news-widget-block">
+            <h4><a href="#">{% trans 'Запущена услуга карбон-нейтральной доставки' %}</a></h4>
+            <div class="post-date">{% trans 'Ноя 20, 2024' %}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- О нас -->
+      <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
+        <div class="footer-widget about-widget">
+          <h2 style="color: #fff"><span class="icon fa fa-user"></span>{% trans 'О нас' %}</h2>
+          <p>{% trans 'Atlas Express — это ваш надёжный партнёр в сфере экспресс-доставки по всему миру. Мы совмещаем высокие стандарты качества и индивидуальный подход к каждому клиенту, чтобы ваши отправления доходили в срок и в полной сохранности.' %}</p>
+          <p class="mb-1"><a href="tel:+998772933300">+998 77 293 33 00</a></p>
+			 <p class="mb-1"><a href="tel:+13477933300">+1 347 793 33 00</a></p>
+          <p><a href="mailto:atlas_express@gmail.com">atlasexpressuz@gmail.com</a></p>
+          <ul class="list-inline mt-3">
+            <li class="list-inline-item"><a href="https://www.instagram.com/atlasexpress.usa?igsh=MW9nMGgxYjdqdzV3eA=="><span class="fa-brands fa-instagram"></span></a></li>
+            <li class="list-inline-item"><a href="https://www.facebook.com/profile.php?id=61561937198092&mibextid=LQQJ4d"><span class="fa-brands fa-facebook"></span></a></li>
+            <li class="list-inline-item"><a href="https://t.me/AtlasExpressUS"><span class="fa-brands fa-telegram"></span></a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+		<!-- Footer Bottom -->
+		<div class="footer-bottom" style="background-color: #0077ab">
+			<div class="copyright">Atlas Express © {% now "Y" %} / {% trans 'Все права защищены' %}</div>
+		</div>
+
+	</footer>
+
+</div>
+<!--End pagewrapper-->
+
+<!--Scroll to top-->
+<div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-arrow-up"></span></div>
+
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="{% static 'js/jquery.fancybox.js' %}"></script>
+<script src="{% static 'js/appear.js' %}"></script>
+<script src="{% static 'js/owl.js' %}"></script>
+<script src="{% static 'js/wow.js' %}"></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
+<script>
+  // Общая функция для отправки fetch-запроса и показа результата в модалке
+  function sendTracking(form) {
+    const fd = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": fd.get("csrfmiddlewaretoken"),
+        "Accept": "application/json"
+      },
+      body: fd
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Ничего не найдено");
+      const ct = response.headers.get("Content-Type") || "";
+      if (!ct.includes("application/json")) throw new Error("Ожидался JSON, но пришёл " + ct);
+      return response.json();
+    })
+    .then(data => {
+	  if (data.error) throw new Error(data.error);
+
+	  // Перевод статуса
+	  let statusText;
+	  switch (data.status) {
+		case "in_warehouse":
+		  statusText = "{% trans 'На складе' %}";
+		  break;
+		case "location":
+		  statusText = "{% trans 'Местоположение' %}";
+		  break;
+		case "packed":
+		  statusText = "{% trans 'Упакован' %}";
+		  break;
+		case "shipped":
+		  statusText = "{% trans 'Отправлен' %}";
+		  break;
+		case "in_customs":
+		  statusText = "{% trans 'На таможне' %}";
+		  break;
+		case "arrive_warehouse":
+		  statusText = "{% trans 'Прибыл на склад' %}";
+		  break;
+		case "accept_location":
+		  statusText = "{% trans 'Принято в местоположение' %}";
+		  break;
+		case "out_location":
+		  statusText = "{% trans 'Вышел из местоположения' %}";
+		  break;
+		case "delivered":
+		  statusText = "{% trans 'Доставлено' %}";
+		  break;
+		default:
+		  statusText = data.status;
+	  }
+
+	  // Определяем, что выводить: дату прибытия или дату доставки
+	  let dateLabel  = "{% trans 'Дата прибытия' %}";
+	  let dateValue  = data.estimatedArrival;
+	  if (data.status === "delivered") {
+		dateLabel = "{% trans 'Доставлено' %}";
+		dateValue = data.updatedAt
+		  ? data.updatedAt.split(" ")[0]
+		  : data.estimatedArrival;
+	  }
+
+	  // Вставляем в тело модалки
+	  document.getElementById("modalBody").innerHTML = `
+		<div style="line-height:1.6;font-size:16px">
+		  <p><strong>🔎 ID:</strong> ${data.id}</p>
+		  <p><strong>📦 {% trans 'Статус:' %}</strong> ${statusText}</p>
+		  <p><strong>📅 ${dateLabel}:</strong> ${dateValue}</p>
+		</div>`;
+	  document.getElementById("modalFooter").innerHTML = `
+		  <div class="btn-box">
+			<a href="/tracking/${data.id}/" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
+		  </div>
+		`;
+	  $('#resultModal').modal('show');
+	})
+    .catch(err => {
+      console.error(err);
+      document.getElementById("modalBody").innerHTML = `
+        <div class="alert alert-warning text-center">
+          ${err.message}
+        </div>`;
+      $('#resultModal').modal('show');
+    });
+  }
+
+  // Навешиваем обработчик на все формы .track-form
+  document.querySelectorAll('.track-form').forEach(form => {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      sendTracking(form);
+    });
+  });
+</script>
+
+
+<script>
+  new WOW().init();
+</script>
+<script>
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const preloader = document.getElementById('preloader');
+      const logo = preloader.querySelector('.logo');
+
+      // запускаем анимацию исчезновения логотипа
+      logo.classList.add('hide');
+
+      // ждём окончания анимации и скрываем прелоадер
+      setTimeout(() => {
+        preloader.style.transition = 'opacity 0.5s';
+        preloader.style.opacity = 0;
+        setTimeout(() => preloader.style.display = 'none', 500);
+      }, 700);
+    }, 2000); // время показа прелоадера
+  });
+</script>
+<!--<script>-->
+<!--  const themeToggle = document.getElementById('theme-toggle');-->
+<!--  const body = document.body;-->
+
+<!--  // Проверяем, есть ли сохранённая тема-->
+<!--  if (localStorage.getItem('theme') === 'dark') {-->
+<!--    body.classList.add('dark-theme');-->
+<!--  }-->
+
+<!--  themeToggle.addEventListener('click', () => {-->
+<!--    body.classList.toggle('dark-theme');-->
+
+<!--    if (body.classList.contains('dark-theme')) {-->
+<!--      localStorage.setItem('theme', 'dark');-->
+<!--    } else {-->
+<!--      localStorage.setItem('theme', 'light');-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
+</body>
+</html>
