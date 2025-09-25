@@ -5,6 +5,23 @@
     return;
   }
 
+  const storage = {
+    get() {
+      try {
+        return window.localStorage.getItem(STORAGE_KEY);
+      } catch (error) {
+        return null;
+      }
+    },
+    set(value) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, value);
+      } catch (error) {
+        // Silently ignore when storage is not available (private mode, etc.)
+      }
+    },
+  };
+
   const prefersDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
   const applyTheme = (theme) => {
@@ -17,12 +34,12 @@
     });
   };
 
-  const storedTheme = localStorage.getItem(STORAGE_KEY);
+  const storedTheme = storage.get();
   const initialTheme = storedTheme || (prefersDark && prefersDark.matches ? 'dark' : 'light');
   applyTheme(initialTheme);
 
   const saveTheme = (theme) => {
-    localStorage.setItem(STORAGE_KEY, theme);
+    storage.set(theme);
   };
 
   toggles.forEach((toggle) => {
@@ -36,7 +53,7 @@
 
   if (prefersDark) {
     const mediaListener = (event) => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
+      if (!storage.get()) {
         applyTheme(event.matches ? 'dark' : 'light');
       }
     };

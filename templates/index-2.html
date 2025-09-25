@@ -146,9 +146,12 @@
 
                     <li class="theme-toggle-mobile d-block d-lg-none">
                         <button type="button" class="theme-toggle-btn" data-theme-toggle aria-label="{% trans 'Переключить тему' %}">
-                            <i class="fa-solid fa-sun theme-icon theme-icon-sun" aria-hidden="true"></i>
+                            <span class="theme-toggle-visual" aria-hidden="true">
+                                <i class="fa-solid fa-sun theme-icon theme-icon-sun"></i>
+                                <span class="theme-toggle-switch"></span>
+                                <i class="fa-solid fa-moon theme-icon theme-icon-moon"></i>
+                            </span>
                             <span class="theme-toggle-label">{% trans 'Тема' %}</span>
-                            <i class="fa-solid fa-moon theme-icon theme-icon-moon" aria-hidden="true"></i>
                         </button>
                     </li>
 
@@ -184,9 +187,12 @@
 
                                 <div class="theme-toggle-container d-none d-lg-flex align-items-center">
                                         <button type="button" class="theme-toggle-btn" data-theme-toggle aria-label="{% trans 'Переключить тему' %}">
-                                                <i class="fa-solid fa-sun theme-icon theme-icon-sun" aria-hidden="true"></i>
+                                                <span class="theme-toggle-visual" aria-hidden="true">
+                                                        <i class="fa-solid fa-sun theme-icon theme-icon-sun"></i>
+                                                        <span class="theme-toggle-switch"></span>
+                                                        <i class="fa-solid fa-moon theme-icon theme-icon-moon"></i>
+                                                </span>
                                                 <span class="theme-toggle-label">{% trans 'Темный режим' %}</span>
-                                                <i class="fa-solid fa-moon theme-icon theme-icon-moon" aria-hidden="true"></i>
                                         </button>
                                 </div>
 
