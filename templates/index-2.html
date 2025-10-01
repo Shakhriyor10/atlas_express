@@ -7,7 +7,10 @@
 <title>AtlasExpress.uz</title>
 <!-- Stylesheets -->
 <!--<link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">-->
-	<link href="{% static 'css/mystyle.css' %}" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="{% static 'css/mystyle.css' %}" rel="stylesheet">
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
 <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
@@ -23,7 +26,7 @@
 <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
 </head>
 
-<body class="hidden-bar-wrapper">
+<body class="hidden-bar-wrapper modern-theme">
 <div id="preloader">
   <div class="preloader-content">
     <img src="{% static 'images/atlas33.png' %}" class="logo" alt="AtlasExpress">
@@ -448,6 +451,33 @@
 
 	<!--Banner Section-->
     {{ banner_section|safe }}
+
+    <section class="feature-highlight">
+        <div class="auto-container">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-plane-up"></i></div>
+                    <h3>{% trans 'Международная доставка без границ' %}</h3>
+                    <p>{% trans 'Оптимизированные маршруты и партнёрская сеть по всему миру сокращают время пути ваших отправлений.' %}</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <h3>{% trans 'Аккуратная обработка каждой посылки' %}</h3>
+                    <p>{% trans 'Склады нового поколения и цифровой контроль качества защищают ваш груз на всех этапах.' %}</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <h3>{% trans 'Отслеживание в реальном времени' %}</h3>
+                    <p>{% trans 'Получайте уведомления о статусе и местоположении отправления 24/7 прямо с мобильных устройств.' %}</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+                    <h3>{% trans 'Поддержка, которая всегда на связи' %}</h3>
+                    <p>{% trans 'Команда AtlasExpress помогает подобрать тариф и ответит на любые вопросы на вашем языке.' %}</p>
+                </div>
+            </div>
+        </div>
+    </section>
 	<!--End Banner Section-->
 
 	<!-- About Section -->
@@ -538,7 +568,7 @@
 	<!-- End About Section -->
 
 	<!-- Services Section -->
-	<section class="services-section" style=" background-image:url({% static 'images/background/2.png' %} )">
+        <section class="services-section">
 		<div class="auto-container">
 			{% block content %}
 			{% if rates %}
