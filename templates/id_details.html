@@ -3,207 +3,128 @@
 {% load i18n dict_utils %}
 
 {% block content %}
-<style>
-  /* ...тут тот же CSS, что и у тебя... */
-  .tracking-container{ position:relative; margin:0 auto; }
-  .tracking-line{ position:absolute; left:50%; top:0; bottom:0; width:4px; background:#ccc; transform:translateX(-50%); z-index:1; }
-  .tracking-step{ position:relative; margin:60px 0; }
-  .tracking-circle{ position:absolute; left:50%; transform:translateX(-50%); width:35px; height:35px; border-radius:50%; background:#ccc; border:4px solid #fff; z-index:2; }
-  .tracking-step.completed .tracking-circle{ background:#28a745; }
-  .tracking-step.comp-blue .tracking-circle{ background:#fff; }
-  .tracking-step.comp-blue .tracking-circle::before{ content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:#1b8af3; border-radius:50%; z-index:-1; animation: blink 1.5s infinite; }
-  @keyframes blink { 0%{opacity:1} 50%{opacity:0.3} 100%{opacity:1} }
-  .step-label{ position:relative; left:calc(50% + 35px); font-size:16px; color:#333; white-space:nowrap; }
-  .step-time { color:#8d8d8d; }
-  @media(max-width:480px){
-    .step-label{ font-size:12px; left:auto; right:calc(50% + 25px); text-align:right; }
-    .step-time{ font-size:10px; }
-  }
-</style>
-<style>
-  .tracking-circle {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-
-.tracking-step.completed .tracking-circle {
-  background-color: #28a745; /* зелёный */
-  border-color: #28a745;
-  color: #fff;
-}
-
-</style>
-<div class="sidebar-page-container" style="background-color: white;">
-  <div class="auto-container">
-    <div class="row clearfix">
-      <!--Content Side-->
-      <div class="content-side col-lg-12 col-md-12 col-sm-12">
-        <div class="track-section">
-          <div class="sec-title-two sec-title">
-            <h2>{% trans 'Поиск' %} &amp; <span>{% trans 'отслеживаение посылок' %}</span></h2>
-          </div>
-
-          <div class="quote-form-box"></div>
-
-          <div class="track-form-two">
-            <form method="post" style="background-color: white; padding: 20px; border-radius: 8px;">
-              {% csrf_token %}
-              <div class="form-group">
-                <label>{% trans 'Пожалуйста, введите ID посылки' %}</label>
-              </div>
-              <div class="form-group">
-                <input type="text" name="trackid" placeholder="Id" required>
-                <button type="submit" class="theme-btn submit-btn">{% trans 'Поиск' %}</button>
-              </div>
-            </form>
-          </div>
-
-          {# Показываем шкалу только если есть data (защищаемся от обращения к data.* когда его нет) #}
-          {% if data %}
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-4">
-                <div class="tracking-container">
-                  <div class="tracking-line"></div>
-
-{% for code, label in steps %}
-  {% if code != "delivered" %}
-    <div class="tracking-step{% if current_index != -1 and forloop.counter0 < current_index %} completed{% elif current_index != -1 and forloop.counter0 == current_index and data.status != 'delivered' %} comp-blue{% endif %}">
-<div class="tracking-circle">
-  {% if current_index != -1 and forloop.counter0 < current_index %}
-    <i class="fa-solid fa-check"></i>
-  {% endif %}
-</div>
-      <div class="step-label">
-        {% trans label %}
-        <div class="step-time">
-          {% if current_index != -1 and forloop.counter0 < current_index %}
-            {% trans "Прошло" %}
-          {% elif code == "accept_location" and current_index != -1 and forloop.counter0 >= current_index %}
-            {{ data.arrival_range|default:"—" }}
-          {% elif current_index != -1 and forloop.counter0 == current_index and data.status != "delivered" %}
-            {% if data.currentLocation.name %}
-              {{ data.currentLocation.name }}
-            {% elif data.currentLocation.address %}
-              {{ data.currentLocation.address }}
-            {% else %}
-              —
-            {% endif %}
-          {% else %}
-            {% trans "Ожидается" %}
-          {% endif %}
+<section class="section" id="tracking-details">
+    <div class="container">
+        <div class="section-header">
+            <span class="chip"><i class="fa-solid fa-compass"></i> {% trans 'Отслеживание' %}</span>
+            <h2>{% trans 'Подробный статус доставки' %}</h2>
+            <p>{% trans 'Следите за каждым этапом движения посылки. Обновления подтягиваются автоматически из системы Atlas Express.' %}</p>
         </div>
-      </div>
-    </div>
-  {% endif %}
-{% endfor %}
 
-                  {# добавляем финальный шаг только если статус доставлено #}
-                  {% if data.status == "delivered" %}
-  <div class="tracking-step completed">
-    <div class="tracking-circle">
-      <i class="fa-solid fa-check"></i>
-    </div>
-    <div class="step-label">
-      {% trans "Доставлено" %}
-      <div class="step-time">{{ data.updatedDateOnly }}</div>
-    </div>
-  </div>
-{% endif %}
-
+        <div class="form-card" style="margin-bottom: 40px;">
+            <form method="post" class="track-form" action="{% url 'tracking_details' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label for="track-id">{% trans 'Введите ID посылки' %}</label>
+                    <input id="track-id" type="text" name="trackid" value="{{ trackid }}" placeholder="{% trans 'Например, AT-458921' %}" required>
                 </div>
-              </div>
-            </div>
-          </div>
-          {% endif %} {# конец if data для шкалы #}
-
-          <div class="map-outer"></div>
-
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i> {% trans 'Обновить статус' %}
+                    </button>
+                </div>
+            </form>
+            {% if error %}
+                <div class="alert alert-warning mt-3" role="alert">{{ error }}</div>
+            {% endif %}
         </div>
-      </div>
-      <!--/Content Side-->
-    </div>
-          {% if data %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div class="card shadow-lg w-100" style="max-width: 520px; font-size: 1.1rem;">
-    <div class="card-header text-center font-weight-bold text-white" style="font-size: 1.3rem; background-color: #005e93;">
-      🔎 {% trans 'Номер счета:' %} {{ data.id }}
-    </div>
-    <div class="card-body">
-      <h5 class="card-title mb-3" style="font-size: 1.25rem;">
-        {% trans 'Ваш тариф:' %} <span class="font-weight-bold">{{ data.shipmentType.name }}</span>
-      </h5>
 
-      <p class="mb-3" style="font-size: 1.15rem;">
-        📦 <strong>{% trans 'Статус:' %}</strong>
-        {% if data.status == "in_warehouse" %}
-          {% trans "На складе" %}
-        {% elif data.status == "location" %}
-          {% trans "Местоположение" %}
-        {% elif data.status == "packed" %}
-          {% trans "Упакован" %}
-        {% elif data.status == "shipped" %}
-          {% trans "Отправлен" %}
-        {% elif data.status == "in_customs" %}
-          {% trans "На таможне" %}
-        {% elif data.status == "arrive_warehouse" %}
-          {% trans "Прибыл на склад" %}
-        {% elif data.status == "accept_location" %}
-          {% trans "Принято в местоположение" %}
-        {% elif data.status == "delivered" %}
-          {% trans "Доставлено" %}
+        {% if data %}
+            <div class="tracking-wrapper">
+                <div class="stack" style="margin-bottom: 24px;">
+                    <div class="info-card">
+                        <strong>{% trans 'Номер отправления' %}</strong>
+                        <span class="h4 mb-0">{{ data.id }}</span>
+                        <span class="muted">{% trans 'Последнее обновление:' %} {{ data.updatedAt }}</span>
+                    </div>
+                    <div class="info-card">
+                        <strong>{% trans 'Тип отправления' %}</strong>
+                        <span>{{ data.shipmentType.name|default:'—' }}</span>
+                        {% if data.weight %}
+                            <span class="muted">{% trans 'Вес:' %} {{ data.weight }} кг</span>
+                        {% endif %}
+                    </div>
+                    <div class="info-card">
+                        <strong>{% trans 'Текущий статус' %}</strong>
+                        <span>
+                            {% if data.status == "in_warehouse" %}
+                                {% trans "На складе" %}
+                            {% elif data.status == "location" %}
+                                {% trans "Местоположение" %}
+                            {% elif data.status == "packed" %}
+                                {% trans "Упакован" %}
+                            {% elif data.status == "shipped" %}
+                                {% trans "Отправлен" %}
+                            {% elif data.status == "in_customs" %}
+                                {% trans "На таможне" %}
+                            {% elif data.status == "arrive_warehouse" %}
+                                {% trans "Прибыл на склад" %}
+                            {% elif data.status == "accept_location" %}
+                                {% trans "Принято в местоположение" %}
+                            {% elif data.status == "out_location" %}
+                                {% trans "Вышел из местоположения" %}
+                            {% elif data.status == "delivered" %}
+                                {% trans "Доставлено" %}
+                            {% else %}
+                                {{ data.status }}
+                            {% endif %}
+                        </span>
+                        {% if data.currentLocation.address or data.currentLocation.name %}
+                            <span class="muted">{% trans 'Текущее местоположение:' %} {{ data.currentLocation.name|default:data.currentLocation.address }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="tracking-steps">
+                    {% for code, label in steps %}
+                        {% if code != 'delivered' or data.status == 'delivered' %}
+                            {% with idx=forloop.counter0 %}
+                                <div class="track-step{% if current_index != -1 and idx < current_index %} completed{% endif %}{% if current_index != -1 and idx == current_index %} active{% endif %}">
+                                    <h4>{{ label }}</h4>
+                                    <span>
+                                        {% if current_index == -1 %}
+                                            {% trans 'Ожидается обновление' %}
+                                        {% elif idx < current_index %}
+                                            {% trans 'Выполнено' %}
+                                        {% elif idx == current_index and code == 'accept_location' and data.arrival_range %}
+                                            {{ data.arrival_range }}
+                                        {% elif idx == current_index and data.status == 'delivered' %}
+                                            {{ data.updatedDateOnly }} {{ data.updatedDateOnlyTime }}
+                                        {% elif idx == current_index %}
+                                            {{ data.currentLocation.name|default:data.currentLocation.address|default:_('В процессе') }}
+                                        {% elif code == 'accept_location' and data.arrival_range %}
+                                            {{ data.arrival_range }}
+                                        {% elif code == 'delivered' and data.updatedDateOnly %}
+                                            {{ data.updatedDateOnly }}
+                                        {% else %}
+                                            {% trans 'Ожидается' %}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="stack" style="margin-top: 32px;">
+                    {% if data.status != 'delivered' %}
+                        <div class="info-card">
+                            <strong>{% trans 'Ориентировочная доставка' %}</strong>
+                            <span>{{ data.arrival_range|default:_('Дата уточняется') }}</span>
+                        </div>
+                    {% else %}
+                        <div class="info-card">
+                            <strong>{% trans 'Посылка доставлена' %}</strong>
+                            <span>{{ data.updatedDateOnly }} {{ data.updatedDateOnlyTime }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         {% else %}
-          {{ data.status }}
+            {% if not error %}
+                <div class="text-center muted">{% trans 'Введите ID посылки, чтобы увидеть детали отслеживания.' %}</div>
+            {% endif %}
         {% endif %}
-      </p>
-
-      {% if data.status != "delivered" %}
-        <p class="mb-3" style="font-size: 1.15rem;">
-          📍 <strong>{% trans 'Текущее местоположение:' %}</strong><br>
-          {{ data.currentLocation.address|default:"—" }}
-        </p>
-        <p style="font-size: 1.15rem;">
-          ⏳ <strong>{% trans 'Доставка будет осуществлена:' %}</strong><br>
-          {{ data.arrival_range|default:"—" }}
-        </p>
-      {% else %}
-        <p style="font-size: 1.15rem;">
-          ✅ <strong>{% trans 'Доставлен:' %}</strong><br>
-          {{ data.updatedDateOnly }}
-        </p>
-      {% endif %}
     </div>
-  </div>
-</div>
-{% endif %}
-  </div>
-</div>
-{% block counter_section %}
-{% endblock %}
-
-{# отдельная карточка с деталями (она у тебя была ниже) #}
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const stepTimes = document.querySelectorAll(".step-time");
-    stepTimes.forEach(function (el) {
-      const text = el.textContent.trim();
-      if (text.length > 20) {
-        const spaceIndex = text.indexOf(" ", 20);
-        if (spaceIndex !== -1) {
-          const firstLine = text.slice(0, spaceIndex);
-          const secondLine = text.slice(spaceIndex + 1);
-          el.innerHTML = firstLine + "<br>" + secondLine;
-        }
-      }
-    });
-  });
-</script>
-
+</section>
 {% endblock %}

@@ -1,100 +1,79 @@
 {% extends 'index-2.html' %}
 {% load static %}
 {% load i18n dict_utils %}
+
 {% block content %}
-    {% if contacts %}
-	<section class="testimonial-section">
-		<div class="auto-container">
-			<div class="sec-title centered">
-				{% if selected_country %}
-				{# Ищем выбранную страну в списке countries #}
-				{% for country in countries %}
-				{% if country.id|stringformat:'s' == selected_country %}
-				<h3>{% trans 'Контакты' %} {{ country.title }}</h3>
-				{% endif %}
-				{% endfor %}
-				{% else %}
-				<h3>{% trans 'Контакты' %}</h3>
-				{% endif %}
-				<div class="separater"></div>
-			</div>
-			<div class="row">
-				{% for address in contacts %}
-				<div class="col-lg-6 col-md-12 mb-4">
-					<div class="testimonial-block blue h-100">
-						<div class="inner-box">
-							<div class="quote-icon flaticon-left-quote"></div>
-							<div class="embed-responsive embed-responsive-16by9 mb-3">
-								<iframe
-										class="embed-responsive-item"
-										src="https://www.google.com/maps?q={{ address.coordinates1 }}&hl=ru&z=14&output=embed"
-										allowfullscreen
-										loading="lazy"
-										style="border:0;">
-								</iframe>
-							</div>
-							<div class="author-info">
-								<div class="info-inner">
-									{% if address.city and address.city.country and address.city.country.photo %}
-									<div class="author-image">
-										<img src="{{ address.city.country.photo.url }}" alt=""/>
-									</div>
-									{% endif %}
-									<div>
-										<h5 class="mb-1">{{ address.country.title }}</h5>
-										<div class="designation">{{ address.title }}</div>
-										<div class="designation">{{ address.city }}</div>
-										<div class="designation">📞 {{ address.phone }}
-										</div>
-									</div>
-								</div>
-							</div>
-							<br>
-						</div>
-					</div>
-				</div>
+<section class="section" id="contacts">
+    <div class="container">
+        <div class="section-header">
+            <span class="chip"><i class="fa-solid fa-handshake"></i> {% trans 'Контакты' %}</span>
+            {% if selected_country %}
+                {% for country in countries %}
+                    {% if country.id|stringformat:'s' == selected_country %}
+                        <h2>{% trans 'Представительства в стране' %} «{{ country.title }}»</h2>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <h2>{% trans 'Все контакты Atlas Express' %}</h2>
+            {% endif %}
+            <p>{% trans 'Выберите ближайший офис или пункт выдачи и свяжитесь с менеджером для уточнения деталей.' %}</p>
+        </div>
 
-				{% endfor %}
-			</div>
+        {% if contacts %}
+            <div class="address-grid">
+                {% for address in contacts %}
+                    <article class="address-card">
+                        {% if address.city and address.city.country %}
+                            <span class="badge-soft">{{ address.city.country.title }}</span>
+                        {% endif %}
+                        <h4>{{ address.title }}</h4>
+                        {% if address.city %}
+                            <span><i class="fa-solid fa-location-dot"></i> {{ address.city }}</span>
+                        {% endif %}
+                        <span><i class="fa-solid fa-phone"></i> {{ address.phone }}</span>
+                        {% if address.phone2 %}
+                            <span class="muted">{% trans 'Доп. номер:' %} {{ address.phone2 }}</span>
+                        {% endif %}
+                        {% if address.coordinates1 %}
+                            <a class="btn btn-outline" href="https://www.google.com/maps?q={{ address.coordinates1 }}" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-map"></i> {% trans 'Открыть карту' %}
+                            </a>
+                        {% endif %}
+                        {% if address.coordinates2 %}
+                            <a class="btn btn-outline" href="https://www.google.com/maps?q={{ address.coordinates2 }}" target="_blank" rel="noopener">
+                                <i class="fa-solid fa-location-arrow"></i> {% trans 'Маршрут' %}
+                            </a>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
 
-			{% if is_paginated %}
-			<ul class="styled-pagination text-center">
+            {% if is_paginated %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}" aria-label="{% trans 'Предыдущая страница' %}">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    {% endif %}
 
-				{# Кнопка "назад" #}
-				{% if page_obj.has_previous %}
-				<li class="prev">
-					<a href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						<span class="fa fa-angle-left"></span>
-					</a>
-				</li>
-				{% endif %}
+                    {% for page_num in paginator.page_range %}
+                        {% if page_obj.number == page_num %}
+                            <span class="active">{{ page_num }}</span>
+                        {% else %}
+                            <a href="?page={{ page_num }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">{{ page_num }}</a>
+                        {% endif %}
+                    {% endfor %}
 
-				{# Список страниц #}
-				{% for page_num in paginator.page_range %}
-				{% if page_obj.number == page_num %}
-				<li><a class="active" href="#">{{ page_num }}</a></li>
-				{% else %}
-				<li>
-					<a href="?page={{ page_num }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						{{ page_num }}
-					</a>
-				</li>
-				{% endif %}
-				{% endfor %}
-
-				{# Кнопка "вперёд" #}
-				{% if page_obj.has_next %}
-				<li class="next">
-					<a href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						<span class="fa fa-angle-right"></span>
-					</a>
-				</li>
-				{% endif %}
-
-			</ul>
-			{% endif %}
-		</div>
-	</section>
-	<!-- End Testimonial Section -->
-	{% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}" aria-label="{% trans 'Следующая страница' %}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center muted">{% trans 'Контактная информация временно недоступна.' %}</div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}

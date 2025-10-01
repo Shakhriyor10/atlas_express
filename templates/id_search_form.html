@@ -3,25 +3,30 @@
 {% load i18n dict_utils %}
 
 {% block content %}
-<div class="tracking-form">
-    <form method="post" style="background-color: white; padding: 20px; border-radius: 8px;">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label>{% trans 'Пожалуйста, введите ID посылки' %}</label>
+<section class="section" id="tracking-form">
+    <div class="container">
+        <div class="section-header">
+            <span class="chip"><i class="fa-solid fa-box"></i> {% trans 'Статус посылки' %}</span>
+            <h2>{% trans 'Проверьте отправление по номеру ID' %}</h2>
+            <p>{% trans 'Введите идентификатор посылки, чтобы узнать последние обновления и ориентировочную дату доставки.' %}</p>
         </div>
-
-        <div class="form-group d-flex">
-            <input class="form-control" type="text" name="trackid" placeholder="ID" required>
-            <button type="submit" class="theme-btn submit-btn ml-2">{% trans 'Поиск' %}</button>
+        <div class="form-card">
+            <form method="post" class="track-form" action="{% url 'tracking_details' %}">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label for="track-id">{% trans 'ID посылки' %}</label>
+                    <input id="track-id" type="text" name="trackid" placeholder="{% trans 'Например, AT-458921' %}" required>
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-magnifying-glass"></i> {% trans 'Найти посылку' %}
+                    </button>
+                </div>
+            </form>
+            {% if error %}
+                <div class="alert alert-warning mt-3" role="alert">{{ error }}</div>
+            {% endif %}
         </div>
-    </form>
-
-    {% if error %}
-        <div class="alert alert-danger mt-3">
-            {{ error }}
-        </div>
-    {% endif %}
-</div>
-
+    </div>
+</section>
 {% endblock %}
