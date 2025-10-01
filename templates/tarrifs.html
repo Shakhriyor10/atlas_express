@@ -1,38 +1,49 @@
 {% extends 'index-2.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
-{% for category in categories %}
-  <div class="sec-title blue centered">
-    <h3><span>{{ category.sender_recipient }}</span></h3>
-    <div class="separater"></div>
-  </div>
-
-  <div class="row clearfix">
-    {% for rate in category.rates_ordered %}
-      <div class="price-block
-                  col-lg-4 col-md-6 col-sm-12
-                  {% if rate.is_hot %}style-two active{% endif %}">
-        <div class="inner-box wow fadeInUp"
-             {% if rate.is_hot %}data-wow-delay="0ms" data-wow-duration="1500ms"{% endif %}>
-          <div class="title">{{ rate.rate_title }}</div>
-          <div class="price-box">
-            <div class="price">{{ rate.price }}$</div>
-            <div class="months">/КГ</div>
-          </div>
-          <ul class="price-list">
-            <li>Минимальный вес: {{ rate.minimal_weight }} кг</li>
-            <li>Срок: {{ rate.delivery_within }} дней</li>
-          </ul>
+<section class="section rates-section" id="rates-full">
+    <div class="container">
+        <div class="section-header">
+            <span class="chip"><i class="fa-solid fa-scale-balanced"></i> {% trans 'Тарифы' %}</span>
+            <h2>{% trans 'Полный каталог тарифов' %}</h2>
+            <p>{% trans 'Найдите оптимальный вариант доставки в нужное направление. Мы обновляем тарифы при любых изменениях на рынке.' %}</p>
         </div>
-      </div>
-    {% empty %}
-      <p>Тарифов для {{ category.sender_recipient }} пока нет.</p>
-    {% endfor %}
-  </div>
-{% empty %}
-  <p>Категорий тарифов пока нет.</p>
-{% endfor %}
-
+        {% for category in categories %}
+            <div class="stack" style="margin-bottom: 48px;">
+                <div>
+                    <h3>{{ category.sender_recipient }}</h3>
+                    {% if category.recipient_country %}
+                        <span class="muted">{{ category.recipient_country }}</span>
+                    {% endif %}
+                </div>
+                {% if category.rates_ordered %}
+                    <div class="rates-grid">
+                        {% for rate in category.rates_ordered %}
+                            <article class="rate-card {% if rate.is_hot %}hot{% endif %}">
+                                {% if rate.is_hot %}
+                                    <span class="badge">🔥 {% trans 'Хит продаж' %}</span>
+                                {% else %}
+                                    <span class="badge">{{ rate.rate_title }}</span>
+                                {% endif %}
+                                <div>
+                                    <div class="price-tag">{{ rate.price }}$ <span>/{% trans 'кг' %}</span></div>
+                                    <div class="rate-meta">
+                                        <span>⚖️ {% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</span>
+                                        <span>⏱ {% trans 'Срок доставки:' %} {{ rate.delivery_within }} {% trans 'дней' %}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="muted">{% trans 'Для этого направления пока нет активных тарифов.' %}</div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <div class="text-center muted">{% trans 'Категории тарифов временно недоступны.' %}</div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}
-
