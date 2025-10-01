@@ -1,36 +1,26 @@
 {# templates/partials/banner_section.html #}
 {% load static %}
 {% load i18n %}
-<style>
-.banner-section {
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: background-image 1s ease-in-out;
-    z-index: 1;
-}
-</style>
-<section class="banner-section blue" id="bannerCarousel"
+<section class="banner-section blue gradient-hero" id="bannerCarousel"
          style="background-image: url({% static 'images/background/avia2.jpg' %})">
-		<div class="auto-container">
-			<div class="row clearfix">
-				<!-- Content Column -->
-				<div class="content-column col-lg-7 col-md-12 col-sm-12">
-					<div class="inner-column wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-						<h1>{% trans 'Лучший в мире поставщик логистических услуг' %}</h1>
-						<div class="text">{% trans 'Мы являемся гибким и преданным партнером по логистическим услугам. Мы работаем с вами, чтобы разрабатывать индивидуальные решения.' %}</div>
-					</div>
-				</div>
+                <div class="auto-container">
+                        <div class="row clearfix">
+                                <!-- Content Column -->
+                                <div class="content-column col-lg-7 col-md-12 col-sm-12 d-flex align-items-center">
+                                        <div class="inner-column wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
+                                                <h1>{% trans 'Лучший в мире поставщик логистических услуг' %}</h1>
+                                                <div class="text">{% trans 'Мы являемся гибким и преданным партнером по логистическим услугам. Мы работаем с вами, чтобы разрабатывать индивидуальные решения.' %}</div>
+                                        </div>
+                                </div>
 
-				<!-- Form Column -->
-				<div class="form-column col-lg-5 col-md-12 col-sm-12">
-					<div class="inner-column wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-						<h2>{% trans 'Поиск посылок' %}</h2>
+                                <!-- Form Column -->
+                                <div class="form-column col-lg-5 col-md-12 col-sm-12">
+                                        <div class="inner-column wow slideInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
+                                                <h2>{% trans 'Поиск посылок' %}</h2>
 
-						<!-- Banner Form -->
-						<div class="banner-form">
-							<form id="track-form" method="post" action="{% url 'track_package' %}">
+                                                <!-- Banner Form -->
+                                                <div class="banner-form">
+                                                        <form id="track-form" method="post" action="{% url 'track_package' %}">
 								{% csrf_token %}
 								<div class="form-group">
 									<input type="text" name="trackid" placeholder="{% trans 'Введите ID посылки' %}" required>
