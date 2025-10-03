@@ -19,11 +19,18 @@ class HomeRateListView(ListView):
     context_object_name = 'rates'
 
     def get_queryset(self):
-        return (
-            Rate.objects
-                .filter(status=True)
-                .order_by('-id')[:3]
-        )
+        rates = Rate.objects.filter(status=True).order_by('-id')
+
+        unique_rates = []
+        seen_countries = set()
+
+        for rate in rates:
+            if rate.country_id not in seen_countries:
+                unique_rates.append(rate)
+                seen_countries.add(rate.country_id)
+            if len(unique_rates) == 3:
+                break
+        return unique_rates
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

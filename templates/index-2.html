@@ -10,6 +10,7 @@
 	<link href="{% static 'css/mystyle.css' %}" rel="stylesheet">
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/atlas-theme.css' %}" rel="stylesheet">
 <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
 <link rel="shortcut icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
 <link rel="icon" href="{% static 'images/atlas123.png' %}" type="image/x-icon">
@@ -25,7 +26,7 @@
 
 <body class="hidden-bar-wrapper">
 <div id="preloader">
-  <div class="preloader-content">
+  <div class="preloader-content-animated">
     <img src="{% static 'images/atlas33.png' %}" class="logo" alt="AtlasExpress">
   </div>
 </div>
@@ -44,12 +45,12 @@
     overflow: hidden;
   }
 
-  .preloader-content {
+  .preloader-content-animated {
     position: relative;
     text-align: center;
   }
 
-.preloader-content .logo {
+.preloader-content-animated .logo {
   width: 20vw;        /* занимает 20% ширины экрана */
   max-width: 200px;   /* но не больше 220px */
   min-width: 130px;   /* и не меньше 150px */
@@ -241,9 +242,7 @@
         <div class="header-upper">
         	<div class="auto-container">
             	<div class="clearfix">
-                	<div class="pull-left logo-box">
-                    	<div class="logo"><a href="index.html"><img src="images/logo.png" alt="" title=""></a></div>
-                    </div>
+
                     <div class="pull-right upper-right">
 
 						<!--Header Lower-->
@@ -538,7 +537,9 @@
 	<!-- End About Section -->
 
 	<!-- Services Section -->
-	<section class="services-section" style=" background-image:url({% static 'images/background/2.png' %} )">
+	<section class="services-section" style=" background-image:url({% static 'images/background/2.png' %} );
+background-color: rgba(255,255,255,0.7);
+background-blend-mode: lighten;">
 		<div class="auto-container">
 			{% block content %}
 			{% if rates %}
@@ -547,52 +548,41 @@
       <div class="separater"></div>
     </div>
 
-    <div class="row clearfix">
+    <div>
+  {% if rates %}
+    <div class="rates-grid">
       {% for rate in rates %}
-        {% if forloop.counter == 2 %}
-          {# второй из трёх — «красивый» стиль #}
-          <div class="price-block style-two active col-lg-4 col-md-6 col-sm-12">
-            <div class="inner-box wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-              <div class="title">{{ rate.country }}</div>
-              <div class="price-box">
-                <div class="price">{{ rate.price }}$</div>
-                <div class="months">/{% trans 'КГ' %}</div>
-              </div>
-              <ul class="price-list">
-				  <li>{{ rate.rate_title }}</li>
-                <li>{% trans 'Доставка в течение:' %} {{ rate.delivery_within }} {% trans 'дней' %}</li>
-                <li>{% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</li>
-              </ul>
-				<br>
-				<br>
-              <div class="btn-box">
-                <a href="{% url 'rates' %}" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
-              </div>
-            </div>
-          </div>
-        {% else %}
-          {# первый и третий — стандартный блок #}
-          <div class="price-block col-lg-4 col-md-6 col-sm-12">
-            <div class="inner-box wowallow fadeInLeft animated"
-                 data-wow-delay="0ms" data-wow-duration="1500ms">
-				<div class="title">{{ rate.country }}</div>
-              <div class="price-box">
-                <div class="price">{{ rate.price }}$</div>
-                <div class="months">/{% trans 'КГ' %}</div>
-              </div>
-              <ul class="price-list">
-                <li>{{ rate.rate_title }}</li>
-                <li>{% trans 'Доставка в течение:' %} {{ rate.delivery_within }} {% trans 'дней' %}</li>
-                <li>{% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</li>
-              </ul>
-              <div class="btn-box">
-                <a href="{% url 'rates' %}" class="theme-btn choose-btn">{% trans 'Подробно' %}</a>
-              </div>
-            </div>
-          </div>
-        {% endif %}
+        <article class="rate-card {% if rate.is_hot %}hot{% endif %}">
+  <h3 class="country-name" style="text-align: center">{{ rate.country }}</h3>
+
+  {% if rate.is_hot %}
+    <span class="badge">🔥 {{ rate.rate_title }}</span>
+  {% else %}
+    <span class="badge">{{ rate.rate_title }}</span>
+  {% endif %}
+
+  <div>
+    <div class="price-tag">
+      {{ rate.price }}$ <span>/{% trans 'кг' %}</span>
+    </div>
+    <div class="rate-meta">
+      <span>⚖️ {% trans 'Минимальный вес:' %} {{ rate.minimal_weight }} {% trans 'кг' %}</span>
+      <span>⏱ {% trans 'Срок доставки:' %} {{ rate.delivery_within }} {% trans 'дней' %}</span>
+    </div>
+  </div>
+
+  <div class="btn-box">
+    <a href="{% url 'rates' %}" class="theme-btn choose-btn">
+      {% trans 'Подробно' %}
+    </a>
+  </div>
+</article>
       {% endfor %}
     </div>
+  {% else %}
+    <p>{% trans 'Нет доступных тарифов' %}</p>
+  {% endif %}
+</div>
   {% else %}
     <p>Тарифов пока нет.</p>
   {% endif %}
@@ -731,7 +721,7 @@
 
 	<!-- Counter Section -->
 	{% block counter_section %}
-	<section class="counter-section" style="background-image:url(images/background/3.jpg)">
+	<section class="counter-section" style="background-image:url({% static 'images/background/1-2-3.jpg' %})">
 		<div class="auto-container">
 			<div class="row clearfix">
 
@@ -913,11 +903,11 @@
 	<!-- End Testimonial Section -->
 	{% endif %}
 	<!--Sponsors Section-->
-	<section class="sponsors-section">
-		<div class="auto-container">
+<!--	<section class="sponsors-section">-->
+<!--		<div class="auto-container">-->
 
-		</div>
-	</section>
+<!--		</div>-->
+<!--	</section>-->
 	<!--End Sponsors Section-->
 
 
@@ -953,7 +943,7 @@
       <!-- Useful Links -->
       <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
         <div class="footer-widget logo-widget">
-          <h2 style="color: #fff"><span class="icon fa fa-thumbs-o-up"></span>{% trans 'Ссылки на сайт' %}</h2>
+          <h2><span class="icon fa fa-thumbs-o-up"></span>{% trans 'Ссылки на сайт' %}</h2>
           <ul class="footer-list list-unstyled">
 		    <li><a href="#">{% trans 'Главная' %}</a></li>
             <li><a href="#">{% trans 'Поиск посылок' %}</a></li>
@@ -967,18 +957,18 @@
       <!-- Recent News -->
       <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
         <div class="footer-widget news-widget">
-          <h2 style="color: #fff"><span class="icon fa fa-bullhorn"></span>{% trans 'Последние новости' %}</h2>
+          <h2><span class="icon fa fa-bullhorn"></span>{% trans 'Последние новости' %}</h2>
           <div class="news-widget-block">
-            <h4><a href="#">{% trans 'Добавлены новые регулярные рейсы в Канаду' %}</a></h4>
-            <div class="post-date">{% trans 'Авг 15, 2024' %}</div>
+            <h4><a href="#" style="color: #555555">{% trans 'Добавлены новые регулярные рейсы в Канаду' %}</a></h4>
+            <div class="post-date" style="color: #555555">{% trans 'Авг 15, 2024' %}</div>
           </div>
           <div class="news-widget-block">
-            <h4><a href="#">{% trans 'Представлен сайт который можно следить посылок' %}</a></h4>
-            <div class="post-date">{% trans 'Сен 26, 2024' %}</div>
+            <h4><a href="#" style="color: #555555">{% trans 'Представлен сайт который можно следить посылок' %}</a></h4>
+            <div class="post-date" style="color: #555555">{% trans 'Сен 26, 2024' %}</div>
           </div>
           <div class="news-widget-block">
-            <h4><a href="#">{% trans 'Запущена услуга карбон-нейтральной доставки' %}</a></h4>
-            <div class="post-date">{% trans 'Ноя 20, 2024' %}</div>
+            <h4><a href="#" style="color: #555555">{% trans 'Запущена услуга карбон-нейтральной доставки' %}</a></h4>
+            <div class="post-date" style="color: #555555">{% trans 'Ноя 20, 2024' %}</div>
           </div>
         </div>
       </div>
@@ -986,10 +976,10 @@
       <!-- О нас -->
       <div class="col-lg-4 col-md-6 col-sm-12 text-center mb-4">
         <div class="footer-widget about-widget">
-          <h2 style="color: #fff"><span class="icon fa fa-user"></span>{% trans 'О нас' %}</h2>
-          <p>{% trans 'Atlas Express — это ваш надёжный партнёр в сфере экспресс-доставки по всему миру. Мы совмещаем высокие стандарты качества и индивидуальный подход к каждому клиенту, чтобы ваши отправления доходили в срок и в полной сохранности.' %}</p>
-          <p class="mb-1"><a href="tel:+998772933300">+998 77 293 33 00</a></p>
-			 <p class="mb-1"><a href="tel:+13477933300">+1 347 793 33 00</a></p>
+          <h2><span class="icon fa fa-user"></span>{% trans 'О нас' %}</h2>
+          <p style="color: #555555">{% trans 'Atlas Express — это ваш надёжный партнёр в сфере экспресс-доставки по всему миру. Мы совмещаем высокие стандарты качества и индивидуальный подход к каждому клиенту, чтобы ваши отправления доходили в срок и в полной сохранности.' %}</p>
+          <p class="mb-1"><a href="tel:+998772933300" style="color: #555555">+998 77 293 33 00</a></p>
+			 <p class="mb-1"><a href="tel:+13477933300" style="color: #555555">+1 347 793 33 00</a></p>
           <p><a href="mailto:atlas_express@gmail.com">atlasexpressuz@gmail.com</a></p>
           <ul class="list-inline mt-3">
             <li class="list-inline-item"><a href="https://www.instagram.com/atlasexpress.usa?igsh=MW9nMGgxYjdqdzV3eA=="><span class="fa-brands fa-instagram"></span></a></li>
