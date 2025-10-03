@@ -2,99 +2,346 @@
 {% load static %}
 {% load i18n dict_utils %}
 {% block content %}
+    <style>
+        .contacts-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(12, 48, 114, 0.95), rgba(25, 108, 214, 0.85)),
+                        url('{% static "images/background/pattern-4.png" %}') center/cover;
+            padding: 80px 0 40px;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .contacts-hero:before,
+        .contacts-hero:after {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            filter: blur(0px);
+        }
+
+        .contacts-hero:before {
+            top: -80px;
+            left: -60px;
+        }
+
+        .contacts-hero:after {
+            bottom: -100px;
+            right: -70px;
+        }
+
+        .contacts-hero .hero-inner {
+            position: relative;
+            z-index: 2;
+        }
+
+        .contacts-hero h1 {
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .contacts-hero p {
+            font-size: 18px;
+            opacity: 0.85;
+        }
+
+        .contacts-grid {
+            margin-top: -120px;
+            padding-bottom: 60px;
+        }
+
+        .contact-card {
+            background: #fff;
+            border-radius: 26px;
+            box-shadow: 0 25px 45px rgba(15, 30, 60, 0.15);
+            overflow: hidden;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 40px 70px rgba(10, 25, 55, 0.25);
+        }
+
+        .contact-card .map-wrapper {
+            position: relative;
+            overflow: hidden;
+            padding-top: 60%;
+        }
+
+        .contact-card iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: saturate(120%) contrast(105%);
+        }
+
+        .contact-card .badge {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            background: rgba(17, 76, 182, 0.9);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-card .card-body {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .contact-meta .country-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-meta .country-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contact-meta h5 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+            color: #0f1e3c;
+        }
+
+        .contact-meta .subtitle {
+            font-size: 15px;
+            color: #617099;
+            margin-top: 4px;
+        }
+
+        .contact-details {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .contact-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #1c2a4d;
+        }
+
+        .contact-detail-item .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: rgba(24, 109, 212, 0.12);
+            color: #1766da;
+            font-size: 18px;
+        }
+
+        .contact-detail-item span {
+            font-weight: 600;
+        }
+
+        .contact-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .contact-actions a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .contact-actions a.primary {
+            background: linear-gradient(135deg, #1c6fe0, #4185f2);
+            color: #fff;
+        }
+
+        .contact-actions a.primary:hover {
+            filter: brightness(1.05);
+        }
+
+        .contact-actions a.secondary {
+            background: rgba(28, 111, 224, 0.12);
+            color: #1c6fe0;
+        }
+
+        .contact-actions a.secondary:hover {
+            background: rgba(28, 111, 224, 0.2);
+        }
+
+        .pagination-wrapper {
+            margin-top: 40px;
+        }
+
+        @media (max-width: 991px) {
+            .contacts-hero {
+                padding: 60px 0 20px;
+            }
+
+            .contacts-hero h1 {
+                font-size: 32px;
+            }
+
+            .contacts-grid {
+                margin-top: -80px;
+                padding-bottom: 40px;
+            }
+        }
+    </style>
+
     {% if contacts %}
-	<section class="testimonial-section">
-		<div class="auto-container">
-			<div class="sec-title centered">
-				{% if selected_country %}
-				{# Ищем выбранную страну в списке countries #}
-				{% for country in countries %}
-				{% if country.id|stringformat:'s' == selected_country %}
-				<h3>{% trans 'Контакты' %} {{ country.title }}</h3>
-				{% endif %}
-				{% endfor %}
-				{% else %}
-				<h3>{% trans 'Контакты' %}</h3>
-				{% endif %}
-				<div class="separater"></div>
-			</div>
-			<div class="row">
-				{% for address in contacts %}
-				<div class="col-lg-6 col-md-12 mb-4">
-					<div class="testimonial-block blue h-100">
-						<div class="inner-box">
-							<div class="quote-icon flaticon-left-quote"></div>
-							<div class="embed-responsive embed-responsive-16by9 mb-3">
-								<iframe
-										class="embed-responsive-item"
-										src="https://www.google.com/maps?q={{ address.coordinates1 }}&hl=ru&z=14&output=embed"
-										allowfullscreen
-										loading="lazy"
-										style="border:0;">
-								</iframe>
-							</div>
-							<div class="author-info">
-								<div class="info-inner">
-									{% if address.city and address.city.country and address.city.country.photo %}
-									<div class="author-image">
-										<img src="{{ address.city.country.photo.url }}" alt=""/>
-									</div>
-									{% endif %}
-									<div>
-										<h5 class="mb-1">{{ address.country.title }}</h5>
-										<div class="designation">{{ address.title }}</div>
-										<div class="designation">{{ address.city }}</div>
-										<div class="designation">📞 {{ address.phone }}
-										</div>
-									</div>
-								</div>
-							</div>
-							<br>
-						</div>
-					</div>
-				</div>
+        <section class="contacts-hero">
+            <div class="auto-container hero-inner text-center">
+                {% if selected_country %}
+                    {% for country in countries %}
+                        {% if country.id|stringformat:'s' == selected_country %}
+                            <h1>{% trans 'Контакты' %} {{ country.title }}</h1>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <h1>{% trans 'Контакты' %}</h1>
+                {% endif %}
+                <p>{% trans 'Выберите офис Atlas Express, чтобы связаться с нами удобным способом.' %}</p>
+            </div>
+        </section>
 
-				{% endfor %}
-			</div>
+        <section class="contacts-grid">
+            <div class="auto-container">
+                <div class="row">
+                    {% for address in contacts %}
+                        <div class="col-lg-6 col-md-12 mb-5">
+                            <div class="contact-card">
+                                <div class="map-wrapper">
+                                    <span class="badge">{{ address.country.title }}</span>
+                                    <iframe
+                                        src="https://www.google.com/maps?q={{ address.coordinates1 }}&hl=ru&z=14&output=embed"
+                                        allowfullscreen
+                                        loading="lazy">
+                                    </iframe>
+                                </div>
+                                <div class="card-body">
+                                    <div class="contact-meta">
+                                        {% if address.city and address.city.country and address.city.country.photo %}
+                                            <div class="country-photo">
+                                                <img src="{{ address.city.country.photo.url }}" alt="{{ address.country.title }}" />
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <h5>{{ address.title }}</h5>
+                                            {% if address.city %}
+                                                <div class="subtitle">{{ address.city }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
 
-			{% if is_paginated %}
-			<ul class="styled-pagination text-center">
+                                    <div class="contact-details">
+                                        {% if address.city %}
+                                            <div class="contact-detail-item">
+                                                <div class="icon">
+                                                    <span class="flaticon-location-pin"></span>
+                                                </div>
+                                                <div>
+                                                    <span>{% trans 'Адрес' %}: </span>
+                                                    <div>{{ address.city }}</div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if address.phone %}
+                                            <div class="contact-detail-item">
+                                                <div class="icon">
+                                                    <span class="flaticon-smartphone-3"></span>
+                                                </div>
+                                                <div>
+                                                    <span>{% trans 'Телефон' %}: </span>
+                                                    <div><a href="tel:{{ address.phone }}">{{ address.phone }}</a></div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
 
-				{# Кнопка "назад" #}
-				{% if page_obj.has_previous %}
-				<li class="prev">
-					<a href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						<span class="fa fa-angle-left"></span>
-					</a>
-				</li>
-				{% endif %}
+                                    <div class="contact-actions">
+                                        {% if address.phone %}
+                                            <a class="primary" href="tel:{{ address.phone }}">
+                                                <span class="fa fa-phone"></span> {% trans 'Позвонить' %}
+                                            </a>
+                                        {% endif %}
+                                        <a class="secondary" href="https://maps.google.com/?q={{ address.coordinates1 }}" target="_blank" rel="noopener">
+                                            <span class="fa fa-map-marker"></span> {% trans 'Открыть карту' %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
 
-				{# Список страниц #}
-				{% for page_num in paginator.page_range %}
-				{% if page_obj.number == page_num %}
-				<li><a class="active" href="#">{{ page_num }}</a></li>
-				{% else %}
-				<li>
-					<a href="?page={{ page_num }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						{{ page_num }}
-					</a>
-				</li>
-				{% endif %}
-				{% endfor %}
+                {% if is_paginated %}
+                    <div class="pagination-wrapper">
+                        <ul class="styled-pagination text-center">
+                            {% if page_obj.has_previous %}
+                                <li class="prev">
+                                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
+                                        <span class="fa fa-angle-left"></span>
+                                    </a>
+                                </li>
+                            {% endif %}
 
-				{# Кнопка "вперёд" #}
-				{% if page_obj.has_next %}
-				<li class="next">
-					<a href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
-						<span class="fa fa-angle-right"></span>
-					</a>
-				</li>
-				{% endif %}
+                            {% for page_num in paginator.page_range %}
+                                {% if page_obj.number == page_num %}
+                                    <li><a class="active" href="#">{{ page_num }}</a></li>
+                                {% else %}
+                                    <li>
+                                        <a href="?page={{ page_num }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
 
-			</ul>
-			{% endif %}
-		</div>
-	</section>
-	<!-- End Testimonial Section -->
-	{% endif %}
+                            {% if page_obj.has_next %}
+                                <li class="next">
+                                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.country %}&country={{ request.GET.country }}{% endif %}{% if request.GET.city %}&city={{ request.GET.city }}{% endif %}">
+                                        <span class="fa fa-angle-right"></span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}
