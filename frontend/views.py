@@ -1,4 +1,5 @@
 import requests
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from frontend.models import Rate, RateCategory, Address, Country, BroadcastMessage
@@ -12,6 +13,9 @@ from datetime import datetime, timedelta
 from rest_framework import generics
 from .models import BroadcastMessage
 from .serializers import BroadcastMessageSerializer
+
+
+MAX_BROADCAST_FILE_SIZE = getattr(settings, "MAX_UPLOAD_SIZE", 100 * 1024 * 1024)
 
 class HomeRateListView(ListView):
     model = Rate
@@ -182,18 +186,26 @@ def send_message_view(request):
         image2 = request.FILES.get("image2")
         image3 = request.FILES.get("image3")
 
-        # сохраняем сообщение
+        for uploaded_file in filter(None, [image1, image2, image3]):
+            if uploaded_file.size > MAX_BROADCAST_FILE_SIZE:
+                messages.error(
+                    request,
+                    f"Файл {uploaded_file.name} превышает допустимый размер 100 МБ.",
+                )
+                return redirect("send_message")
+
         BroadcastMessage.objects.create(
             description=description,
             image1=image1,
             image2=image2,
-            image3=image3
+            image3=image3,
         )
 
+        messages.success(request, "Рассылка успешно создана.")
         return redirect("send_message")
 
-    messages = BroadcastMessage.objects.order_by("-created_at")[:5]
-    return render(request, "send_message.html", {"messages": messages})
+    recent_messages = BroadcastMessage.objects.order_by("-created_at")[:5]
+    return render(request, "send_message.html", {"recent_messages": recent_messages})
 
 # список всех сообщений
 class BroadcastMessageListView(generics.ListAPIView):

@@ -126,7 +126,8 @@ class Rate(models.Model):
 class BroadcastMessage(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField()
-    image1 = models.ImageField(upload_to='broadcasts/', blank=True, null=True)
-    image2 = models.ImageField(upload_to='broadcasts/', blank=True, null=True)
-    image3 = models.ImageField(upload_to='broadcasts/', blank=True, null=True)
+    image1 = models.FileField(upload_to='broadcasts/', blank=True, null=True)
+    image2 = models.FileField(upload_to='broadcasts/', blank=True, null=True)
+    image3 = models.FileField(upload_to='broadcasts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
