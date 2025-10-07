@@ -24,58 +24,17 @@
 <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
 </head>
 
-<body class="hidden-bar-wrapper">
-<div id="preloader">
-  <div class="preloader-content-animated">
-    <img src="{% static 'images/atlas33.png' %}" class="logo" alt="AtlasExpress">
+<body class="hidden-bar-wrapper preload-active">
+<div id="preloader" role="status" aria-live="polite">
+  <div class="preloader-content">
+    <div class="preloader-logo-wrap">
+      <img src="{% static 'images/atlas33.png' %}" class="preloader-logo" alt="AtlasExpress">
+      <span class="preloader-ring"></span>
+      <span class="preloader-ring preloader-ring--secondary"></span>
+    </div>
+    <p class="preloader-text">Загружаем AtlasExpress...</p>
   </div>
 </div>
-
-<style>
-  /* Прелоадер на весь экран */
-  #preloader {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    overflow: hidden;
-  }
-
-  .preloader-content-animated {
-    position: relative;
-    text-align: center;
-  }
-
-.preloader-content-animated .logo {
-  width: 20vw;        /* занимает 20% ширины экрана */
-  max-width: 200px;   /* но не больше 220px */
-  min-width: 130px;   /* и не меньше 150px */
-  animation: logo-scale-in 1s ease-in-out forwards;
-}
-
-  /* Анимация появления */
-  @keyframes logo-scale-in {
-    0%   { transform: scale(0); opacity: 0; }
-    50%  { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  /* Анимация исчезновения */
-  @keyframes logo-scale-out {
-    0%   { transform: scale(1); opacity: 1; }
-    50%  { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(0.5); opacity: 0; }
-  }
-
-  /* класс для запуска анимации исчезновения */
-  .logo.hide {
-    animation: logo-scale-out 0.7s ease-in-out forwards;
-  }
-</style>
 <!--<style>-->
 <!--  /* Тёмная тема */-->
 <!--  body.dark-theme {-->
@@ -1122,20 +1081,24 @@ background-blend-mode: lighten;">
 </script>
 <script>
   window.addEventListener('load', function() {
+    const preloader = document.getElementById('preloader');
+    if (!preloader) {
+      document.body.classList.remove('preload-active');
+      document.body.classList.add('page-loaded');
+      return;
+    }
+
+    const revealDelay = 1400;
+
     setTimeout(function() {
-      const preloader = document.getElementById('preloader');
-      const logo = preloader.querySelector('.logo');
+      preloader.classList.add('is-hidden');
+      document.body.classList.remove('preload-active');
+      document.body.classList.add('page-loaded');
 
-      // запускаем анимацию исчезновения логотипа
-      logo.classList.add('hide');
-
-      // ждём окончания анимации и скрываем прелоадер
       setTimeout(() => {
-        preloader.style.transition = 'opacity 0.5s';
-        preloader.style.opacity = 0;
-        setTimeout(() => preloader.style.display = 'none', 500);
-      }, 700);
-    }, 2000); // время показа прелоадера
+        preloader.remove();
+      }, 600);
+    }, revealDelay);
   });
 </script>
 <!--<script>-->
