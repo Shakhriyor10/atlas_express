@@ -141,10 +141,74 @@ body.page-loaded .page-wrapper {
   animation-delay: -6s;
 }
 
+#preloader .preloader-flight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  transition: opacity 0.6s ease;
+}
+
+.preloader-plane-track {
+  position: absolute;
+  top: clamp(20%, 32vh, 42%);
+  left: -42vw;
+  width: clamp(220px, 36vw, 420px);
+  display: flex;
+  justify-content: flex-end;
+  animation: preloader-plane-traverse 7.2s cubic-bezier(0.39, 0.575, 0.565, 1) infinite;
+}
+
+.preloader-plane-body {
+  position: relative;
+  width: 100%;
+  height: clamp(62px, 12vw, 138px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  animation: preloader-plane-bob 2.8s ease-in-out infinite;
+}
+
+.preloader-plane-icon {
+  font-size: clamp(42px, 8vw, 92px);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.85) 35%, rgba(15, 141, 242, 0.9) 65%, rgba(86, 34, 255, 0.85) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 14px 28px rgba(15, 23, 42, 0.28));
+  transform: translateY(-12%);
+}
+
+.preloader-plane-trail {
+  position: absolute;
+  top: 50%;
+  right: 24%;
+  width: 68%;
+  height: clamp(4px, 0.9vw, 12px);
+  background: linear-gradient(90deg, rgba(15, 141, 242, 0), rgba(15, 141, 242, 0.58) 45%, rgba(255, 255, 255, 0.9) 80%, rgba(255, 255, 255, 0));
+  border-radius: 999px;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: 100% 50%;
+  filter: blur(0.4px);
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: preloader-plane-trail 7.2s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
 #preloader.is-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+#preloader.is-hidden .preloader-flight {
+  opacity: 0;
 }
 
 #preloader.is-hidden .preloader-content {
@@ -166,6 +230,7 @@ body.page-loaded .page-wrapper {
   overflow: hidden;
   transition: transform 0.7s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.7s ease;
   backdrop-filter: blur(18px);
+  z-index: 2;
 }
 
 [data-theme="dark"] .preloader-content {
@@ -279,6 +344,57 @@ body.page-loaded .page-wrapper {
   }
 }
 
+@keyframes preloader-plane-traverse {
+  0% {
+    transform: translate3d(-40vw, 12vh, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  40% {
+    transform: translate3d(12vw, 6vh, 0);
+  }
+  65% {
+    transform: translate3d(48vw, -6vh, 0);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(118vw, 10vh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes preloader-plane-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+@keyframes preloader-plane-trail {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+  15% {
+    opacity: 0.85;
+    transform: translateY(-50%) scaleX(1);
+  }
+  55% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+}
+
 @keyframes page-fade-in {
   0% {
     opacity: 0;
@@ -297,10 +413,30 @@ body.page-loaded .page-wrapper {
   #preloader::after,
   .preloader-content,
   .preloader-logo,
-  .preloader-ring {
+  .preloader-ring,
+  .preloader-plane-track,
+  .preloader-plane-body,
+  .preloader-plane-trail {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .preloader-plane-track {
+    animation: none !important;
+    left: 50%;
+    top: 30vh;
+    transform: translateX(-50%);
+  }
+
+  .preloader-plane-body,
+  .preloader-plane-trail {
+    animation: none !important;
+  }
+
+  .preloader-plane-trail {
+    opacity: 0.4;
+    transform: translateY(-50%) scaleX(0.6);
   }
 }
 
@@ -313,6 +449,10 @@ body.page-loaded .page-wrapper {
   .preloader-text {
     font-size: 12px;
     letter-spacing: 0.12em;
+  }
+
+  .preloader-plane-track {
+    top: 26vh;
   }
 }
 
